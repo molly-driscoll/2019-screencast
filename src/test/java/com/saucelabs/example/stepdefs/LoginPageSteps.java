@@ -14,8 +14,6 @@ public class LoginPageSteps implements En
         Given("^The user is on the Home Page$", () -> {
             LoginPage loginPage = PagesFactory.getInstance().getLoginPage();
             loginPage.navigateTo(LoginPage.PAGE_URL);
-
-            Util.getSaucePerformance(PagesFactory.getInstance().getDriver());
         });
 
         And("^The user provides the username as \"([^\"]*)\" and password as \"([^\"]*)\"$",
@@ -23,6 +21,7 @@ public class LoginPageSteps implements En
             LoginPage loginPage = PagesFactory.getInstance().getLoginPage();
             loginPage.enterUsername(username);
             loginPage.enterPassword(password);
+            Util.sleep(1000);
         });
 
         And("^The user clicks the 'Login' button$", () -> {
@@ -33,9 +32,10 @@ public class LoginPageSteps implements En
         Then("^The user should login successfully and is brought to the inventory page$", () -> {
             InventoryPage inventoryPage = PagesFactory.getInstance().getInventoryPage();
 
-//            inventoryPage.waitForPageLoad();
             String currentUrl = PagesFactory.getInstance().getDriver().getCurrentUrl();
             Assert.assertEquals(currentUrl, inventoryPage.PAGE_URL);
+
+            Util.getSaucePerformance(PagesFactory.getInstance().getDriver());
         });
 
         Then("^The user should be shown a locked out message$", () -> {

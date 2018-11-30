@@ -1,4 +1,4 @@
-@SignIn
+@SignOn
 Feature: Test Entering Credentials
   As an online shopper, users must sign in with valid credentials
 

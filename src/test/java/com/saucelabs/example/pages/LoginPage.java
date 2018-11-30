@@ -1,15 +1,11 @@
 package com.saucelabs.example.pages;
 
-import com.saucelabs.example.MyFluentWait;
 import com.saucelabs.example.Util;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import java.time.temporal.ChronoUnit;
 
 public class LoginPage extends AbstractPage
 {
@@ -28,11 +24,6 @@ public class LoginPage extends AbstractPage
     {
         super(driver);
         PageFactory.initElements(driver, this);
-
-        wait = new MyFluentWait<WebDriver>(driver)
-                .withTimeout(60, ChronoUnit.SECONDS)
-                .pollingEvery(2, ChronoUnit.SECONDS)
-                .ignoring(NoSuchElementException.class);
     }
 
     @Override
@@ -67,11 +58,13 @@ public class LoginPage extends AbstractPage
 
     public void enterPassword(String password)
     {
+        passwordElem.click();
         passwordElem.sendKeys(password);
     }
 
     public void enterUsername(String username)
     {
+        usernameElem.click();
         usernameElem.sendKeys(username);
     }
 

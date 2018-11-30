@@ -6,9 +6,12 @@ public class PagesFactory
 {
     private static PagesFactory instance;
     private WebDriver driver;
-    private LoginPage loginPage;
+
+    private CheckOutStepOnePage checkOutStepOnePage;
+    private CheckOutStepTwoPage checkOutStepTwoPage;
     private InventoryPage inventoryPage;
-    private ShoppingCartPage shoppingCartPage;
+    private LoginPage loginPage;
+    private CartPage cartPage;
 
     public static void start(WebDriver driver)
     {
@@ -23,9 +26,11 @@ public class PagesFactory
     private PagesFactory(WebDriver driver)
     {
         this.driver = driver;
-        loginPage = new LoginPage(driver);
+        checkOutStepOnePage = new CheckOutStepOnePage(driver);
+        checkOutStepTwoPage = new CheckOutStepTwoPage(driver);
         inventoryPage = new InventoryPage(driver);
-        shoppingCartPage = new ShoppingCartPage(driver);
+        loginPage = new LoginPage(driver);
+        cartPage = new CartPage(driver);
     }
 
     public WebDriver getDriver()
@@ -33,15 +38,19 @@ public class PagesFactory
         return driver;
     }
 
-    public LoginPage getLoginPage()
-    {
-        return loginPage;
-    }
+    public CheckOutStepOnePage getCheckOutStepOnePage() { return checkOutStepOnePage; }
+
+    public CheckOutStepTwoPage getCheckOutStepTwoPage() { return checkOutStepTwoPage; }
 
     public InventoryPage getInventoryPage()
     {
         return inventoryPage;
     }
 
-    public ShoppingCartPage getShoppingCartPage() { return shoppingCartPage; }
+    public LoginPage getLoginPage()
+    {
+        return loginPage;
+    }
+
+    public CartPage getCartPage() { return cartPage; }
 }

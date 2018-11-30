@@ -23,7 +23,7 @@ public class Util
     /**
      * If true, the tests will be run on the local desktop.  If false, the tests will run on Sauce Labs.
      */
-    public static final boolean runLocal = true;
+    public static final boolean runLocal = false;
 
     public static final String buildTag = "Build " + new Date();
 
@@ -62,7 +62,7 @@ public class Util
     }
 
     /**
-     * 	Sets the job name
+     * Sets the job name
      *
      * @param driver The WebDriver instance we use to log the info
      */
@@ -120,22 +120,28 @@ public class Util
         request.put(entity);
     }
 
-    public static void log(Object instance, String format, Object... args)
+    public static void log(String format, Object... args)
     {
-        String mergedFormat = "[%s][%s] " + format;
-        Object[] mergedArgs = new Object[args.length + 2];
-        mergedArgs[0] = Thread.currentThread().getName();
-        mergedArgs[1] = instance.getClass().getSimpleName();
-        System.arraycopy(args, 0, mergedArgs, 2, args.length);
-
-        System.out.printf(mergedFormat, mergedArgs);
+        System.out.printf(format, args);
         System.out.println();
     }
 
-    protected void log(Class instance, String output)
-    {
-        System.out.printf("[%s][%s] %s\n", Thread.currentThread().getName(), instance.getClass().getSimpleName(), output);
-    }
+//    public static void log(Object instance, String format, Object... args)
+//    {
+//        String mergedFormat = "[%s][%s] " + format;
+//        Object[] mergedArgs = new Object[args.length + 2];
+//        mergedArgs[0] = Thread.currentThread().getName();
+//        mergedArgs[1] = instance.getClass().getSimpleName();
+//        System.arraycopy(args, 0, mergedArgs, 2, args.length);
+//
+//        System.out.printf(mergedFormat, mergedArgs);
+//        System.out.println();
+//    }
+//
+//    protected void log(Class instance, String output)
+//    {
+//        System.out.printf("[%s][%s] %s\n", Thread.currentThread().getName(), instance.getClass().getSimpleName(), output);
+//    }
 
     public static void sleep(long msecs)
     {

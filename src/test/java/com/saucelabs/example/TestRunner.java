@@ -16,12 +16,21 @@ import org.testng.annotations.Test;
         features = "src/test/resources/features",
         glue = {"com/saucelabs/example/stepdefs"},
 //        tags = {"@Regression1"},
-        tags = {"@Orders"},
+//        tags = {"@SignOn"},
+//          tags = {"@Orders"},
+//        tags = {"@Orders,@SignOn"},
         snippets = SnippetType.CAMELCASE,
         plugin = {
-            "json:target/cucumber-reports/cucumber.json",
-            "rerun:target/cucumber-reports/rerun.txt",
-            "usage:target/cucumber-reports/cucumber-usage.json"
+            "json:target/cucumber-report/cucumber.json",
+//            "rerun:target/cucumber-reports/rerun.txt",
+//            "usage:target/cucumber-reports/cucumber-usage.json",
+//            "pretty:target/pretty",
+//            "progress:target/progress",
+//            "timeline:target/timeline",
+//            "usage:target/usage",
+//            "testng:target/testng",
+//            "html:target/html",
+//            "com.saucelabs.cucumber.ExtentReportsFormatter:target/myextentreports"
         })
 public class TestRunner
 {
@@ -49,6 +58,9 @@ public class TestRunner
     @DataProvider
     public Object[][] scenarios()
     {
+        if (testNGCucumberRunner == null)
+            return null;
+
         return testNGCucumberRunner.provideScenarios();
     }
 
@@ -56,6 +68,9 @@ public class TestRunner
     public void tearDownClass()
     throws Exception
     {
+        if (testNGCucumberRunner == null)
+            return;
+
         testNGCucumberRunner.finish();
     }
 }

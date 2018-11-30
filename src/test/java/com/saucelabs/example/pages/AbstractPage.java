@@ -52,7 +52,8 @@ abstract class AbstractPage
 
         // Wait for the page to load...
 //        wait.until(ExpectedConditions.titleContains(this.getTitle()));
-        wait.until(ExpectedConditions.elementToBeClickable(testElement));
+//        wait.until(ExpectedConditions.elementToBeClickable(testElement));
+        wait.until(ExpectedConditions.visibilityOf(testElement));
     }
 
     protected void moveTo(WebElement elem)

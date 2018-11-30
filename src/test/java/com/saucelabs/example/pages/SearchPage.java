@@ -1,13 +1,9 @@
 package com.saucelabs.example.pages;
 
-import com.saucelabs.example.MyFluentWait;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import java.time.temporal.ChronoUnit;
 
 public class SearchPage extends AbstractPage
 {
@@ -35,11 +31,11 @@ public class SearchPage extends AbstractPage
     {
         super(driver);
         PageFactory.initElements(driver, this);
-
-        wait = new MyFluentWait<WebDriver>(driver)
-                .withTimeout(60, ChronoUnit.SECONDS)
-                .pollingEvery(2, ChronoUnit.SECONDS)
-                .ignoring(NoSuchElementException.class);
+//
+//        wait = new MyFluentWait<WebDriver>(driver)
+//                .withTimeout(60, ChronoUnit.SECONDS)
+//                .pollingEvery(2, ChronoUnit.SECONDS)
+//                .ignoring(NoSuchElementException.class);
     }
 
     @Override

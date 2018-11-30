@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.saucelabs.examples</groupId>
-    <artifactId>thrivent-cucumber</artifactId>
+    <artifactId>saucedemo-java-cucumber</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -13,6 +13,16 @@
         <!-- require log4j 2.6, until 2.8 released with fix for https://issues.apache.org/jira/browse/LOG4J2-1642 -->
         <log4j.version>2.8.2</log4j.version>
         <powermock.version>1.7.0</powermock.version>
+        <aspectj.version>1.8.10</aspectj.version>
+
+        <maven.failsafe.plugin.version>2.22.1</maven.failsafe.plugin.version>
+        <maven.build.helper.plugin.version>3.0.0</maven.build.helper.plugin.version>
+        <junit.version>4.12</junit.version>
+        <cucumber.version>4.2.0</cucumber.version>
+        <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
+
+        <generated.runner.directory>${project.build.directory}/parallel/runners</generated.runner.directory>
+        <generated.feature.directory>${project.build.directory}/parallel/features</generated.feature.directory>
     </properties>
 
     <dependencies>
@@ -79,7 +89,7 @@
         <dependency>
             <groupId>net.masterthought</groupId>
             <artifactId>cucumber-reporting</artifactId>
-            <version>3.15.0</version>
+            <version>4.2.3</version>
         </dependency>
 
         <!-- REPORTING -->
@@ -131,6 +141,33 @@
             <version>20170515.1</version>
         </dependency>
 
+        <!-- ALLURE -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber3-jvm</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        <!-- EXTENTREPORTS -->
+        <!--<dependency>-->
+            <!--<groupId>com.vimalselvam</groupId>-->
+            <!--<artifactId>cucumber-extentsreport</artifactId>-->
+            <!--<version>3.1.1</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.trivago.rta</groupId>
+            <artifactId>cluecumber-report-plugin</artifactId>
+            <version>1.5.0
+            </version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -148,15 +185,41 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
+            <!--<plugin>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-surefire-plugin</artifactId>-->
+            <!--<version>2.20.1</version>-->
+            <!--<configuration>-->
+            <!--<suiteXmlFiles>-->
+            <!--<suiteXmlFile>testng.xml</suiteXmlFile>-->
+            <!--</suiteXmlFiles>-->
+            <!--&lt;!&ndash;<testFailureIgnore>false</testFailureIgnore>&ndash;&gt;-->
+            <!--&lt;!&ndash;<argLine>&ndash;&gt;-->
+            <!--&lt;!&ndash; -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"&ndash;&gt;-->
+            <!--&lt;!&ndash; -Dcucumber.options="&#45;&#45;plugin io.qameta.allure.cucumberjvm.AllureCucumberJvm"&ndash;&gt;-->
+            <!--&lt;!&ndash;</argLine>&ndash;&gt;-->
+            <!--<argLine>-->
+            <!-- -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"-->
+            <!--</argLine>-->
+            <!--</configuration>-->
+            <!--<dependencies>-->
+            <!--<dependency>-->
+            <!--<groupId>org.aspectj</groupId>-->
+            <!--<artifactId>aspectjweaver</artifactId>-->
+            <!--<version>${aspectj.version}</version>-->
+            <!--</dependency>-->
+            <!--</dependencies>-->
+            <!--</plugin>-->
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20.1</version>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.9</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <!--<testFailureIgnore>false</testFailureIgnore>-->
+                    <!--<reportVersion>2.7.0</reportVersion>-->
+                    <!--<allureDownloadUrl>https://github.com/allure-framework/allure2/releases/download/2.7.0/allure-2.7.0.zip</allureDownloadUrl>-->
+                    <resultsDirectory>allure-results</resultsDirectory>
+                    <reportDirectory>allure-report</reportDirectory>
                 </configuration>
             </plugin>
             <!--<plugin>-->
@@ -187,6 +250,29 @@
             <!--</execution>-->
             <!--</executions>-->
             <!--</plugin>-->
+
+            <!-- CLUCUMBER REPORTS -->
+            <plugin>
+                <groupId>com.trivago.rta</groupId>
+                <artifactId>cluecumber-report-plugin</artifactId>
+                <version>1.5.0-bm</version>
+                <executions>
+                    <execution>
+                        <id>report</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>reporting</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceJsonReportDirectory>${project.build.directory}/cucumber-report</sourceJsonReportDirectory>
+                    <generatedHtmlReportDirectory>${project.build.directory}/generated-report</generatedHtmlReportDirectory>
+                    <skip>false</skip>
+                    <!--<customCss>src/main/resources/css/screen.css</customCss>-->
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

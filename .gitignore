@@ -1,4 +1,6 @@
+*.png
 *.iml
+trends-stats-tmp.json
 .DS_Store
 .idea/
 target/

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class GenerateReport
 {
     private static final String outputDir = "./target/my-cucumber-reports";
-    private static final String cucumberJson = "./target/cucumber-reports/cucumber.json";
+    private static final String cucumberJson = "./target/cucumber-report/cucumber.json";
 
     public static void main(String[] args)
     throws Exception
@@ -28,7 +28,7 @@ public class GenerateReport
         File reportOutputDirectory = new File(outputDir);
 
         List<String> jsonFiles = new ArrayList<>();
-        jsonFiles.add("./target/cucumber-reports/cucumber.json");
+        jsonFiles.add(cucumberJson);
 
         String projectName = "Automated Testing with Sauce Labs";
         boolean runWithJenkins = false;
@@ -38,7 +38,7 @@ public class GenerateReport
         Configuration config = new Configuration(reportOutputDirectory, projectName);
 
         // optional config
-        config.setParallelTesting(parallelTesting);
+//        config.setParallelTesting(parallelTesting);
         config.setRunWithJenkins(runWithJenkins);
         config.setBuildNumber("" + buildNumber);
 
@@ -69,7 +69,7 @@ public class GenerateReport
 
         List<String> jsonFiles = new ArrayList<>();
 
-        File jsonDir = new File("./target/cucumber-reports");
+        File jsonDir = new File("./target/cucumber-report");
 
         Pattern p = Pattern.compile("^cucumber.(\\d{14}).json$");
 
@@ -98,7 +98,7 @@ public class GenerateReport
             Configuration config = new Configuration(reportOutputDirectory, projectName);
 
             // optional config
-            config.setParallelTesting(parallelTesting);
+//            config.setParallelTesting(parallelTesting);
             config.setRunWithJenkins(runWithJenkins);
             config.setBuildNumber("" + buildNumber);
 
