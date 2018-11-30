@@ -1,5 +1,12 @@
 # Sauce Demo Test Suite
 
+To execute, simply run:
+
+    $ mvn test
+    
+And each scenario will execute.
+
+## Scenario breakdown
 
 |Tag|Test Name|Smoke Test|Regression Test|End to End|
 |---|---|---|---|---|
