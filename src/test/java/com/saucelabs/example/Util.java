@@ -23,7 +23,7 @@ public class Util
     /**
      * If true, the tests will be run on the local desktop.  If false, the tests will run on Sauce Labs.
      */
-    public static final boolean runLocal = false;
+    public static final boolean runLocal = true;
 
     public static final String buildTag = "Build " + new Date();
 
