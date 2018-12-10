@@ -1,10 +1,12 @@
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
 import net.masterthought.cucumber.Reportable;
+import net.masterthought.cucumber.Trends;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,25 +29,29 @@ public class GenerateReport
     {
         File reportOutputDirectory = new File(outputDir);
 
-        List<String> jsonFiles = new ArrayList<>();
-        jsonFiles.add(cucumberJson);
+        File jsonDir = new File("target/cucumber-report");
+        List<String> findAllJSONFiles = findAllJSONFiles(jsonDir);
+
+//        List<String> jsonFiles = new ArrayList<>();
+//        jsonFiles.add(cucumberJson);
 
         String projectName = "Automated Testing with Sauce Labs";
         boolean runWithJenkins = false;
         boolean parallelTesting = false;
-        int buildNumber = 1;
+//        int buildNumber = 1;
 
         Configuration config = new Configuration(reportOutputDirectory, projectName);
 
         // optional config
 //        config.setParallelTesting(parallelTesting);
         config.setRunWithJenkins(runWithJenkins);
-        config.setBuildNumber("" + buildNumber);
+//        config.setBuildNumber("" + buildNumber);
+        config.setBuildNumber("" + new Date().getTime());
 
         // additional metadata presented on main page
-//        config.addClassifications("Platform", "Windows");
-//        config.addClassifications("Browser", "Firefox");
-//        config.addClassifications("Branch", "release/1.0");
+        config.addClassifications("Platform", "macOS");
+        config.addClassifications("Browser", "Chrome");
+        config.addClassifications("Branch", "release/1.0");
 
         // optionally add metadata presented on main page via properties file
         List<String> classificationFiles = new ArrayList<>();
@@ -53,13 +59,33 @@ public class GenerateReport
 //        classificationFiles.add("properties-2.properties");
         config.addClassificationFiles(classificationFiles);
 
-        config.setTrendsStatsFile(new File("trends-stats-tmp.json"));
+        config.setTrendsStatsFile(new File("cucumber-trends.json"));
 
-        ReportBuilder reportBuilder = new ReportBuilder(jsonFiles, config);
+        boolean hasTrends = config.isTrendsAvailable();
+
+        ReportBuilder reportBuilder = new ReportBuilder(findAllJSONFiles, config);
         Reportable result = reportBuilder.generateReports();
 
-//        Trends trends = new Trends();
-//        trends.addBuild("buildName", result);
+        Trends trends = new Trends();
+        trends.addBuild("buildName", result);
+    }
+
+    private List<String> findAllJSONFiles(File file)
+    {
+        List<String> ret = new ArrayList<String>();
+        if (file.isDirectory())
+        {
+            File[] subFiles = file.listFiles();
+            for (File childFile : subFiles)
+            {
+                ret.addAll(findAllJSONFiles(childFile));
+            }
+        }
+        else if (file.getName().toLowerCase().endsWith(".json"))
+        {
+            ret.add(file.getAbsolutePath());
+        }
+        return ret;
     }
 
     public void run2()

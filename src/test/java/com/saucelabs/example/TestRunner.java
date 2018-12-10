@@ -1,5 +1,10 @@
 package com.saucelabs.example;
 
+import com.github.mkolisnyk.cucumber.runner.AfterSuite;
+import com.github.mkolisnyk.cucumber.runner.BeforeSuite;
+import com.github.mkolisnyk.cucumber.runner.ExtendedCucumberOptions;
+import com.github.mkolisnyk.cucumber.runner.ReportRunner;
+import com.github.mkolisnyk.cucumber.runner.runtime.ExtendedRuntimeOptions;
 import cucumber.api.CucumberOptions;
 import cucumber.api.SnippetType;
 import cucumber.api.testng.CucumberFeatureWrapper;
@@ -12,40 +17,116 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-@CucumberOptions(
-        features = "src/test/resources/features",
-        glue = {"com/saucelabs/example/stepdefs"},
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+@ExtendedCucumberOptions(jsonReport = "target/cucumber-report/cucumber.json", retryCount = 3, detailedReport = true, detailedAggregatedReport = true, overviewReport = true,
+        //coverageReport = true,
+        jsonUsageReport = "target/cucumber-report/cucumber-usage.json", usageReport = true, toPDF = true,
+//        excludeCoverageTags = {"@flaky" },
+//        includeCoverageTags = {"@passed" },
+        outputFolder = "target/extendedcucumber")
+@CucumberOptions(features = "src/test/resources/features", glue = {"com/saucelabs/example/stepdefs"},
 //        tags = {"@Regression1"},
 //        tags = {"@SignOn"},
 //          tags = {"@Orders"},
 //        tags = {"@Orders,@SignOn"},
-        snippets = SnippetType.CAMELCASE,
-        plugin = {
-            "json:target/cucumber-report/cucumber.json",
+        snippets = SnippetType.CAMELCASE, plugin = {"json:target/cucumber-report/cucumber.json",
 //            "rerun:target/cucumber-reports/rerun.txt",
-//            "usage:target/cucumber-reports/cucumber-usage.json",
+        "usage:target/cucumber-report/cucumber-usage.json",
 //            "pretty:target/pretty",
 //            "progress:target/progress",
 //            "timeline:target/timeline",
 //            "usage:target/usage",
 //            "testng:target/testng",
-//            "html:target/html",
+        "html:target/cucumber-html-report"
 //            "com.saucelabs.cucumber.ExtentReportsFormatter:target/myextentreports"
-        })
+})
 public class TestRunner
 {
     private TestNGCucumberRunner testNGCucumberRunner;
+    private ExtendedRuntimeOptions[] extendedOptions;
+    private Class<?> clazz;
+
+    private void runPredefinedMethods(Class<?> annotation)
+    throws Exception
+    {
+        Method[] methodList = this.clazz.getMethods();
+        for (Method method : methodList)
+        {
+            Annotation[] annotations = method.getAnnotations();
+            for (Annotation item : annotations)
+            {
+                if (item.annotationType().equals(annotation))
+                {
+                    method.invoke(this);
+                    break;
+                }
+            }
+        }
+    }
 
     @BeforeClass(alwaysRun = true)
     public void setUpClass()
     throws Exception
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
+
+        this.clazz = this.getClass();
+        try
+        {
+            extendedOptions = ExtendedRuntimeOptions.init(clazz);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        clazz = this.getClass();
+        try
+        {
+            runPredefinedMethods(BeforeSuite.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDownClass()
+    throws Exception
+    {
+        if (testNGCucumberRunner == null)
+        {
+            return;
+        }
+
+        testNGCucumberRunner.finish();
+
+        try
+        {
+            runPredefinedMethods(AfterSuite.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        for (ExtendedRuntimeOptions extendedOption : extendedOptions)
+        {
+            ReportRunner.run(extendedOption);
+        }
+    }
+
+//    @BeforeClass(alwaysRun = true)
+//    public void setUpClass()
+//    throws Exception
+//    {
+//        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
+//    }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Scenarios", dataProvider = "scenarios")
     public void feature(PickleEventWrapper pickleWrapper, CucumberFeatureWrapper cucumberFeatureWrapper)
-            throws Throwable
+    throws Throwable
     {
         PickleEvent event = pickleWrapper.getPickleEvent();
         Pickle pickle = event.pickle;
@@ -59,18 +140,22 @@ public class TestRunner
     public Object[][] scenarios()
     {
         if (testNGCucumberRunner == null)
+        {
             return null;
+        }
 
         return testNGCucumberRunner.provideScenarios();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void tearDownClass()
-    throws Exception
-    {
-        if (testNGCucumberRunner == null)
-            return;
-
-        testNGCucumberRunner.finish();
-    }
+//    @AfterClass(alwaysRun = true)
+//    public void tearDownClass()
+//    throws Exception
+//    {
+//        if (testNGCucumberRunner == null)
+//        {
+//            return;
+//        }
+//
+//        testNGCucumberRunner.finish();
+//    }
 }

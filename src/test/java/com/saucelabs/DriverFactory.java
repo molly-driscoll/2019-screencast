@@ -1,4 +1,4 @@
-package com.saucelabs.example.stepdefs;
+package com.saucelabs;
 
 import com.saucelabs.example.Util;
 import cucumber.api.Scenario;
@@ -111,6 +111,8 @@ public class DriverFactory implements En
             {
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
+//                    chromeOptions.addArguments("--ignore-certificate-errors");
+                    chromeOptions.setAcceptInsecureCerts(true);
                     chromeOptions.merge(caps);
                     driver = new ChromeDriver(chromeOptions);
                     break;

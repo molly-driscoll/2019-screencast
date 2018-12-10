@@ -1,7 +1,9 @@
-@Orders
+@orders
   Feature: Validate Web Ordering
 
-    @Smoke1
+    ###############################################################################################
+    @smoke1
+    @regression1
     Scenario Outline: Place a single item in the shopping cart
       Given The user is on the Home Page
       And The user provides the username as "<username>" and password as "<password>"
@@ -13,6 +15,8 @@
       |username|password|item|
       |standard_user  |secret_sauce |Sauce Labs Backpack|
 
+    ###############################################################################################
+    @regression1
     Scenario Outline: Place multiple items in the shopping cart
       Given The user is on the Home Page
       And The user provides the username as "<username>" and password as "<password>"
@@ -27,6 +31,8 @@
         |username|password|item|
         |standard_user  |secret_sauce |Sauce Labs Backpack|
 
+    ###############################################################################################
+    @regression1
     Scenario Outline: Validate Order Totals
       Given The user is on the Home Page
       And The user provides the username as "<username>" and password as "<password>"

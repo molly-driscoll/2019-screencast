@@ -1,5 +1,6 @@
 package com.saucelabs.example.stepdefs;
 
+import com.saucelabs.DriverFactory;
 import com.saucelabs.example.Util;
 import com.saucelabs.example.pages.PagesFactory;
 import cucumber.api.Scenario;
@@ -18,7 +19,11 @@ public class StartingSteps extends DriverFactory implements En
     public StartingSteps()
     {
         Before((Scenario scenario) -> {
-            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "69.0", "macOS 10.13");
+
+            startDate = new Date();
+
+            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "70.0", "macOS 10.13");
+//            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.FIREFOX, "63.0", "macOS 10.13");
 //            driver = DriverFactory.getMobileDriverInstance(scenario, Platform.ANDROID, "9", null);
 
 
@@ -40,8 +45,6 @@ public class StartingSteps extends DriverFactory implements En
 //            driver = DriverFactory.getMobileDriverInstance(scenario, "Google Pixel 2 XL", BrowserType.ANDROID, "9");
 //            driver = DriverFactory.getMobileDriverInstance(scenario, "iPhone X Simulator", Platform.IOS, "11.3");
 
-
-            startDate = new Date();
             PagesFactory.start(driver);
         });
 
@@ -50,6 +53,11 @@ public class StartingSteps extends DriverFactory implements En
 
             stopDate = new Date();
             Util.log("Completed %s, %d seconds.", stopDate, (stopDate.getTime() - startDate.getTime()) / 1000L);
+
+            if (driver == null)
+            {
+                return;
+            }
 
             if (Util.isMobile == false)
             {

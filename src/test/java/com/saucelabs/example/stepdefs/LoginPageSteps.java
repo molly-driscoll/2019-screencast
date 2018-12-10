@@ -7,6 +7,8 @@ import com.saucelabs.example.pages.PagesFactory;
 import cucumber.api.java8.En;
 import org.testng.Assert;
 
+import java.util.concurrent.TimeUnit;
+
 public class LoginPageSteps implements En
 {
     public LoginPageSteps()
@@ -31,6 +33,9 @@ public class LoginPageSteps implements En
 
         Then("^The user should login successfully and is brought to the inventory page$", () -> {
             InventoryPage inventoryPage = PagesFactory.getInstance().getInventoryPage();
+
+            PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            Util.sleep(3000);
 
             String currentUrl = PagesFactory.getInstance().getDriver().getCurrentUrl();
             Assert.assertEquals(currentUrl, inventoryPage.PAGE_URL);
