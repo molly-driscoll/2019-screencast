@@ -9,8 +9,6 @@ import cucumber.api.java.en.Then;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
-import java.util.concurrent.TimeUnit;
-
 public class CheckoutSteps
 {
     @And("^The user provides the first name as \"([^\"]*)\" and last name as \"([^\"]*)\" and zip code as \"([^\"]*)\"$")
@@ -50,9 +48,6 @@ public class CheckoutSteps
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
-        PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        Util.sleep(3000);
-
         String expected = itemTotal;
         String actual = page.getItemTotal();
 
@@ -61,6 +56,9 @@ public class CheckoutSteps
         Util.info(driver,">>> The item total should be '%s'", expected);
         Util.getSaucePerformance(driver);
         Util.takeScreenShot(driver);
+
+        //        PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        Util.sleep(1000);
     }
 
     @And("^The tax should be \"([^\"]*)\"$")

@@ -15,7 +15,17 @@ Feature: Test Entering Credentials
   Examples:
     |username       |password     |
     |standard_user  |secret_sauce |
-    |problem_user   |secret_sauce |
+
+  ###############################################################################################
+  @regression1
+  Scenario Outline: Verify valid users can sign in
+    And The user provides the username as "<username>" and password as "<password>"
+    And The user clicks the 'Login' button
+    Then The user should login successfully and is brought to the inventory page
+    Examples:
+      |username       |password     |
+      |standard_user  |secret_sauce |
+      |problem_user   |secret_sauce |
 
   ###############################################################################################
   @regression1

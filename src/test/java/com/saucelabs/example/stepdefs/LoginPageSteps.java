@@ -5,9 +5,8 @@ import com.saucelabs.example.pages.InventoryPage;
 import com.saucelabs.example.pages.LoginPage;
 import com.saucelabs.example.pages.PagesFactory;
 import cucumber.api.java8.En;
+import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-
-import java.util.concurrent.TimeUnit;
 
 public class LoginPageSteps implements En
 {
@@ -32,15 +31,20 @@ public class LoginPageSteps implements En
         });
 
         Then("^The user should login successfully and is brought to the inventory page$", () -> {
-            InventoryPage inventoryPage = PagesFactory.getInstance().getInventoryPage();
+            PagesFactory pf = PagesFactory.getInstance();
+            WebDriver driver = pf.getDriver();
 
-            PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-            Util.sleep(3000);
+            InventoryPage inventoryPage = pf.getInventoryPage();
 
             String currentUrl = PagesFactory.getInstance().getDriver().getCurrentUrl();
             Assert.assertEquals(currentUrl, inventoryPage.PAGE_URL);
 
+            Util.info(driver, "The user should login successfully and is brought to the inventory page");
             Util.getSaucePerformance(PagesFactory.getInstance().getDriver());
+            Util.takeScreenShot(driver);
+
+//            PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            Util.sleep(3000);
         });
 
         Then("^The user should be shown a locked out message$", () -> {

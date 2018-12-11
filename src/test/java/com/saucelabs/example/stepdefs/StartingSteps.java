@@ -22,7 +22,7 @@ public class StartingSteps extends DriverFactory implements En
 
             startDate = new Date();
 
-            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "70.0", "macOS 10.13");
+            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "69.0", "macOS 10.13");
 //            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.FIREFOX, "63.0", "macOS 10.13");
 //            driver = DriverFactory.getMobileDriverInstance(scenario, Platform.ANDROID, "9", null);
 
