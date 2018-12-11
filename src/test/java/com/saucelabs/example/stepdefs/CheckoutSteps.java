@@ -58,7 +58,7 @@ public class CheckoutSteps
         Util.takeScreenShot(driver);
 
         //        PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        Util.sleep(1000);
+        Util.sleep(3000);
     }
 
     @And("^The tax should be \"([^\"]*)\"$")
