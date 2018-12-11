@@ -40,11 +40,11 @@ public class LoginPageSteps implements En
             Assert.assertEquals(currentUrl, inventoryPage.PAGE_URL);
 
             Util.info(driver, "The user should login successfully and is brought to the inventory page");
-            Util.getSaucePerformance(PagesFactory.getInstance().getDriver());
-            Util.takeScreenShot(driver);
+//            Util.getSaucePerformance(PagesFactory.getInstance().getDriver());
+//            Util.takeScreenShot(driver);
 
 //            PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-            Util.sleep(3000);
+//            Util.sleep(3000);
         });
 
         Then("^The user should be shown a locked out message$", () -> {
