@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GenerateReport
+public class GenerateMasterThoughtReport
 {
     private static final String outputDir = "./target/my-cucumber-reports";
     private static final String cucumberJson = "./target/cucumber-report/cucumber.json";
@@ -19,7 +19,7 @@ public class GenerateReport
     public static void main(String[] args)
     throws Exception
     {
-        GenerateReport app = new GenerateReport();
+        GenerateMasterThoughtReport app = new GenerateMasterThoughtReport();
         app.run();
 
     }
