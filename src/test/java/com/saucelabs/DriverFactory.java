@@ -151,17 +151,25 @@ public class DriverFactory implements En
             caps.setCapability("accesskey", accessKey);
             caps.setCapability("extendedDebugging", true);
 
-
             // Pull the Job Name and Build Number from Jenkins if available...
-            String jobName = System.getenv("JOB_NAME");
-            String buildNumber = System.getenv("BUILD_NUMBER");
-            if (jobName != null && buildNumber != null)
+            String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
+            if (jenkinsBuildNumber != null)
             {
-                caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+                caps.setCapability("build", jenkinsBuildNumber);
             }
             else
             {
-                caps.setCapability("build", Util.buildTag);
+                String jobName = System.getenv("JOB_NAME");
+                String buildNumber = System.getenv("BUILD_NUMBER");
+
+                if (jobName != null && buildNumber != null)
+                {
+                    caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+                }
+                else
+                {
+                    caps.setCapability("build", Util.buildTag);
+                }
             }
 
 
@@ -171,6 +179,7 @@ public class DriverFactory implements En
         String sessionId = driver.getSessionId().toString();
         Util.log("Started %s", new Date().toString());
         Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
+        Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
 
         // Set reasonable page load and script timeouts
         driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
