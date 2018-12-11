@@ -54,11 +54,11 @@ public class CheckoutSteps
         Assert.assertEquals(actual, expected);
 
         Util.info(driver,">>> The item total should be '%s'", expected);
-        Util.getSaucePerformance(driver);
-        Util.takeScreenShot(driver);
+//        Util.getSaucePerformance(driver);
+//        Util.takeScreenShot(driver);
 
         //        PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-        Util.sleep(3000);
+//        Util.sleep(3000);
     }
 
     @And("^The tax should be \"([^\"]*)\"$")
