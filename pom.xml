@@ -240,27 +240,27 @@
             <!--</plugin>-->
 
             <!-- CLUCUMBER REPORTS -->
-            <plugin>
-                <groupId>com.trivago.rta</groupId>
-                <artifactId>cluecumber-report-plugin</artifactId>
-                <version>1.5.0-bm</version>
-                <executions>
-                    <execution>
-                        <id>report</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>reporting</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sourceJsonReportDirectory>${project.build.directory}/cucumber-report</sourceJsonReportDirectory>
-                    <generatedHtmlReportDirectory>${project.build.directory}/generated-report
-                    </generatedHtmlReportDirectory>
-                    <skip>false</skip>
-                    <!--<customCss>src/main/resources/css/screen.css</customCss>-->
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>com.trivago.rta</groupId>-->
+                <!--<artifactId>cluecumber-report-plugin</artifactId>-->
+                <!--<version>1.5.0-bm</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>report</id>-->
+                        <!--<phase>post-integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>reporting</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<sourceJsonReportDirectory>${project.build.directory}/cucumber-report</sourceJsonReportDirectory>-->
+                    <!--<generatedHtmlReportDirectory>${project.build.directory}/generated-report-->
+                    <!--</generatedHtmlReportDirectory>-->
+                    <!--<skip>false</skip>-->
+                    <!--&lt;!&ndash;<customCss>src/main/resources/css/screen.css</customCss>&ndash;&gt;-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
         </plugins>
     </build>
