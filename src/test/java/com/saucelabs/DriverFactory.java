@@ -150,7 +150,20 @@ public class DriverFactory implements En
             caps.setCapability("username", userName);
             caps.setCapability("accesskey", accessKey);
             caps.setCapability("extendedDebugging", true);
-            caps.setCapability("build", Util.buildTag);
+
+
+            // Pull the Job Name and Build Number from Jenkins if available...
+            String jobName = System.getenv("JOB_NAME");
+            String buildNumber = System.getenv("BUILD_NUMBER");
+            if (jobName != null && buildNumber != null)
+            {
+                caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+            }
+            else
+            {
+                caps.setCapability("build", Util.buildTag);
+            }
+
 
             driver = new RemoteWebDriver(SAUCE_URL, caps);
         }
