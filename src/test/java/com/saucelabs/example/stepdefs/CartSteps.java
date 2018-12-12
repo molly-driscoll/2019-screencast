@@ -23,12 +23,11 @@ public class CartSteps implements En
         Then("^There should be \"([^\"]*)\" items in the shopping cart$", (String count) -> {
             PagesFactory pf = PagesFactory.getInstance();
             WebDriver driver = pf.getDriver();
+            Util.info(driver, ">>> There should be \"%s\" items in the shopping cart", count);
 
             CartPage cartPage = pf.getCartPage();
             int actualCount = cartPage.getItemCount();
             int expectedCount = Integer.parseInt(count);
-
-            Util.info(driver, ">>> There should be %d items in the shopping cart", expectedCount);
             Assert.assertEquals(actualCount, expectedCount);
         });
     }

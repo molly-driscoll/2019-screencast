@@ -1,6 +1,5 @@
 package com.saucelabs.example;
 
-import com.saucelabs.example.pages.PagesFactory;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
@@ -19,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Util
 {
@@ -169,8 +167,8 @@ public class Util
                 {
                     driver.manage().logs().get("sauce:performance");
 
-                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-//                    Util.sleep(3000);
+//                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+                    Util.sleep(3000);
                 }
                 catch (org.openqa.selenium.UnsupportedCommandException ignored)
                 {

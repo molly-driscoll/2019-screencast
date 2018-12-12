@@ -17,8 +17,7 @@ public class CheckoutSteps
     {
         PagesFactory pf = PagesFactory.getInstance();
         RemoteWebDriver driver = pf.getDriver();
-
-        Util.info(driver, ">>> The user provides the first and last name and password");
+        Util.info(driver, ">>> The user provides the first name as \"username\" and last name as \"password\" and zip code as \"zipcode\"");
 
         CheckOutStepOnePage page = pf.getCheckOutStepOnePage();
         page.enterFirstName(firstName);
@@ -32,7 +31,6 @@ public class CheckoutSteps
     {
         PagesFactory pf = PagesFactory.getInstance();
         RemoteWebDriver driver = pf.getDriver();
-
         Util.info(driver, ">>> The user clicks 'Continue'");
 
         CheckOutStepOnePage page = pf.getCheckOutStepOnePage();
@@ -45,15 +43,14 @@ public class CheckoutSteps
     {
         PagesFactory pf = PagesFactory.getInstance();
         RemoteWebDriver driver = pf.getDriver();
+        Util.info(driver,">>> The item total should be '%s'", itemTotal);
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
         String expected = itemTotal;
         String actual = page.getItemTotal();
-
         Assert.assertEquals(actual, expected);
 
-        Util.info(driver,">>> The item total should be '%s'", expected);
         Util.getSaucePerformance(driver);
 //        Util.takeScreenShot(driver);
     }
@@ -64,14 +61,13 @@ public class CheckoutSteps
     {
         PagesFactory pf = PagesFactory.getInstance();
         RemoteWebDriver driver = pf.getDriver();
+        Util.info(driver, ">>> The tax should be '%s'", tax);
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
         String expected = tax;
         String actual = page.getTax();
-
         Assert.assertEquals(actual, expected);
-        Util.info(driver, ">>> The tax should be '%s'", expected);
     }
 
     @And("^The total should be \"([^\"]*)\"$")
@@ -80,13 +76,12 @@ public class CheckoutSteps
     {
         PagesFactory pf = PagesFactory.getInstance();
         RemoteWebDriver driver = pf.getDriver();
+        Util.info(driver, ">>> The total should be '%s'", total);
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
         String expected = total;
         String actual = page.getTotal();
-
         Assert.assertEquals(actual, expected);
-        Util.info(driver, ">>> The total should be '%s'", expected);
     }
 }
