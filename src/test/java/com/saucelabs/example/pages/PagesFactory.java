@@ -1,11 +1,11 @@
 package com.saucelabs.example.pages;
 
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class PagesFactory
 {
     private static PagesFactory instance;
-    private WebDriver driver;
+    private RemoteWebDriver driver;
 
     private CheckOutStepOnePage checkOutStepOnePage;
     private CheckOutStepTwoPage checkOutStepTwoPage;
@@ -13,7 +13,7 @@ public class PagesFactory
     private LoginPage loginPage;
     private CartPage cartPage;
 
-    public static void start(WebDriver driver)
+    public static void start(RemoteWebDriver driver)
     {
         instance = new PagesFactory(driver);
     }
@@ -23,7 +23,7 @@ public class PagesFactory
         return instance;
     }
 
-    private PagesFactory(WebDriver driver)
+    private PagesFactory(RemoteWebDriver driver)
     {
         this.driver = driver;
         checkOutStepOnePage = new CheckOutStepOnePage(driver);
@@ -33,14 +33,20 @@ public class PagesFactory
         cartPage = new CartPage(driver);
     }
 
-    public WebDriver getDriver()
+    public RemoteWebDriver getDriver()
     {
         return driver;
     }
 
-    public CheckOutStepOnePage getCheckOutStepOnePage() { return checkOutStepOnePage; }
+    public CheckOutStepOnePage getCheckOutStepOnePage()
+    {
+        return checkOutStepOnePage;
+    }
 
-    public CheckOutStepTwoPage getCheckOutStepTwoPage() { return checkOutStepTwoPage; }
+    public CheckOutStepTwoPage getCheckOutStepTwoPage()
+    {
+        return checkOutStepTwoPage;
+    }
 
     public InventoryPage getInventoryPage()
     {
@@ -52,5 +58,8 @@ public class PagesFactory
         return loginPage;
     }
 
-    public CartPage getCartPage() { return cartPage; }
+    public CartPage getCartPage()
+    {
+        return cartPage;
+    }
 }

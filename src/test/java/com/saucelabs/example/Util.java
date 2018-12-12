@@ -1,11 +1,13 @@
 package com.saucelabs.example;
 
+import com.saucelabs.example.pages.PagesFactory;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Util
 {
@@ -155,16 +158,23 @@ public class Util
         }
     }
 
-    public static void getSaucePerformance(WebDriver driver)
+    public static void getSaucePerformance(RemoteWebDriver driver)
     {
         if (Util.runLocal == false)
         {
-            try
+            String browserName = driver.getCapabilities().getBrowserName();
+            if (browserName.equals("chrome"))
             {
-                driver.manage().logs().get("sauce:performance");
-            }
-            catch (org.openqa.selenium.UnsupportedCommandException ignored)
-            {
+                try
+                {
+                    driver.manage().logs().get("sauce:performance");
+
+                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+//                    Util.sleep(3000);
+                }
+                catch (org.openqa.selenium.UnsupportedCommandException ignored)
+                {
+                }
             }
         }
     }

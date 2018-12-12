@@ -6,7 +6,7 @@ import com.saucelabs.example.pages.CheckOutStepTwoPage;
 import com.saucelabs.example.pages.PagesFactory;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 
 public class CheckoutSteps
@@ -16,7 +16,7 @@ public class CheckoutSteps
     throws Throwable
     {
         PagesFactory pf = PagesFactory.getInstance();
-        WebDriver driver = pf.getDriver();
+        RemoteWebDriver driver = pf.getDriver();
 
         Util.info(driver, ">>> The user provides the first and last name and password");
 
@@ -31,7 +31,7 @@ public class CheckoutSteps
     throws Throwable
     {
         PagesFactory pf = PagesFactory.getInstance();
-        WebDriver driver = pf.getDriver();
+        RemoteWebDriver driver = pf.getDriver();
 
         Util.info(driver, ">>> The user clicks 'Continue'");
 
@@ -44,7 +44,7 @@ public class CheckoutSteps
     throws Throwable
     {
         PagesFactory pf = PagesFactory.getInstance();
-        WebDriver driver = pf.getDriver();
+        RemoteWebDriver driver = pf.getDriver();
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
@@ -54,11 +54,8 @@ public class CheckoutSteps
         Assert.assertEquals(actual, expected);
 
         Util.info(driver,">>> The item total should be '%s'", expected);
-//        Util.getSaucePerformance(driver);
+        Util.getSaucePerformance(driver);
 //        Util.takeScreenShot(driver);
-
-        //        PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-//        Util.sleep(3000);
     }
 
     @And("^The tax should be \"([^\"]*)\"$")
@@ -66,7 +63,7 @@ public class CheckoutSteps
     throws Throwable
     {
         PagesFactory pf = PagesFactory.getInstance();
-        WebDriver driver = pf.getDriver();
+        RemoteWebDriver driver = pf.getDriver();
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
@@ -82,7 +79,7 @@ public class CheckoutSteps
     throws Throwable
     {
         PagesFactory pf = PagesFactory.getInstance();
-        WebDriver driver = pf.getDriver();
+        RemoteWebDriver driver = pf.getDriver();
 
         CheckOutStepTwoPage page = pf.getCheckOutStepTwoPage();
 
