@@ -158,23 +158,23 @@ public class Util
 
     public static void getSaucePerformance(RemoteWebDriver driver)
     {
-        if (Util.runLocal == false)
-        {
-            String browserName = driver.getCapabilities().getBrowserName();
-            if (browserName.equals("chrome"))
-            {
-                try
-                {
-                    driver.manage().logs().get("sauce:performance");
-
-//                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-                    Util.sleep(3000);
-                }
-                catch (org.openqa.selenium.UnsupportedCommandException ignored)
-                {
-                }
-            }
-        }
+//        if (Util.runLocal == false)
+//        {
+//            String browserName = driver.getCapabilities().getBrowserName();
+//            if (browserName.equals("chrome"))
+//            {
+//                try
+//                {
+//                    driver.manage().logs().get("sauce:performance");
+//
+////                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+//                    Util.sleep(3000);
+//                }
+//                catch (org.openqa.selenium.UnsupportedCommandException ignored)
+//                {
+//                }
+//            }
+//        }
     }
 
     public static void takeScreenShot(WebDriver driver)
