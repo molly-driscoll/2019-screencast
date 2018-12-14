@@ -10,6 +10,7 @@ import gherkin.pickles.Pickle;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 //@ExtendedCucumberOptions(
@@ -79,56 +80,19 @@ import org.testng.annotations.Test;
 public class TestRunner
 {
     private TestNGCucumberRunner testNGCucumberRunner;
-//    private ExtendedRuntimeOptions[] extendedOptions;
-//    private Class<?> clazz;
 
-//    private void runPredefinedMethods(Class<?> annotation)
-//    throws Exception
-//    {
-//        Method[] methodList = this.clazz.getMethods();
-//        for (Method method : methodList)
-//        {
-//            Annotation[] annotations = method.getAnnotations();
-//            for (Annotation item : annotations)
-//            {
-//                if (item.annotationType().equals(annotation))
-//                {
-//                    method.invoke(this);
-//                    break;
-//                }
-//            }
-//        }
-//    }
-
+    @Parameters({"browser", "version", "platform"})
     @BeforeClass(alwaysRun = true)
-    public void setUpClass()
-    throws Exception
+    public void setUpClass(String browser, String version, String platform)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
-//        this.clazz = this.getClass();
-//        try
-//        {
-//            extendedOptions = ExtendedRuntimeOptions.init(clazz);
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//        clazz = this.getClass();
-//        try
-//        {
-//            runPredefinedMethods(BeforeSuite.class);
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+        TestPlatform tp = new TestPlatform(browser, version, platform);
+        Util.setTestPlatform(tp);
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDownClass()
-    throws Exception
     {
         if (testNGCucumberRunner == null)
         {
@@ -137,26 +101,7 @@ public class TestRunner
 
         testNGCucumberRunner.finish();
 
-//        try
-//        {
-//            runPredefinedMethods(AfterSuite.class);
-//        }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
-//        for (ExtendedRuntimeOptions extendedOption : extendedOptions)
-//        {
-//            ReportRunner.run(extendedOption);
-//        }
     }
-
-//    @BeforeClass(alwaysRun = true)
-//    public void setUpClass()
-//    throws Exception
-//    {
-//        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
-//    }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Scenarios", dataProvider = "scenarios")
     public void feature(PickleEventWrapper pickleWrapper, CucumberFeatureWrapper cucumberFeatureWrapper)
