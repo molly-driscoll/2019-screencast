@@ -29,40 +29,34 @@ import java.util.concurrent.TimeUnit;
 
 public class DriverFactory implements En
 {
-    protected static final String userName = System.getenv("SAUCE_USERNAME");
-    protected static final String accessKey = System.getenv("SAUCE_ACCESS_KEY");
-    protected static final String toAccessKey = System.getenv("TESTOBJECT_API_KEY");
+    private static final String userName = System.getenv("SAUCE_USERNAME");
+    private static final String accessKey = System.getenv("SAUCE_ACCESS_KEY");
+    private static final String toAccessKey = System.getenv("TESTOBJECT_API_KEY");
 
-    private static URL LOCAL_URL;
+    private static URL LOCAL_SELENIUM_URL;
+    private static URL LOCAL_APPIUM_URL;
     private static URL SAUCE_URL;
     private static URL TESTOBJECT_URL;
-
-    public enum Browser
-    {
-        FIREFOX("firefox"), CHROME("chrome"), SAFARI("safari"), EDGE("MicrosoftEdge"), INTERNETEXPLORER("internet explorer");
-
-        private String browserName;
-
-        Browser(String browserName)
-        {
-            this.browserName = browserName;
-        }
-
-        public String toString()
-        {
-            return browserName;
-        }
-    }
 
     static
     {
         try
         {
-            LOCAL_URL = new URL("http://127.0.0.1:4723/wd/hub");
+            LOCAL_SELENIUM_URL = new URL("http://127.0.0.1:4444/wd/hub");
         }
         catch (MalformedURLException e)
         {
-            System.err.printf("Malformed LOCAL_URL: %s\n", e.getMessage());
+            System.err.printf("Malformed LOCAL_APPIUM_URL: %s\n", e.getMessage());
+            System.exit(-1);
+        }
+
+        try
+        {
+            LOCAL_APPIUM_URL = new URL("http://127.0.0.1:4723/wd/hub");
+        }
+        catch (MalformedURLException e)
+        {
+            System.err.printf("Malformed LOCAL_APPIUM_URL: %s\n", e.getMessage());
             System.exit(-1);
         }
 
@@ -95,13 +89,9 @@ public class DriverFactory implements En
     public static RemoteWebDriver getDesktopDriverInstance(Scenario scenario, Browser browser, String version, String platform)
     {
         MutableCapabilities caps = new MutableCapabilities();
-        caps.setCapability("browserName", browser.browserName);
+        caps.setCapability("browserName", browser.toString());
         caps.setCapability("platform", platform);
         caps.setCapability("version", version);
-        caps.setCapability("recordVideo", "true");
-        caps.setCapability("recordMp4", "true");
-        caps.setCapability("recordScreenshots", "true");
-        caps.setCapability("screenResolution", "1600x1200");
         caps.setCapability("name", scenario.getName());
 
         RemoteWebDriver driver;
@@ -111,8 +101,6 @@ public class DriverFactory implements En
             {
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
-//                    chromeOptions.addArguments("--ignore-certificate-errors");
-                    chromeOptions.setAcceptInsecureCerts(true);
                     chromeOptions.merge(caps);
                     driver = new ChromeDriver(chromeOptions);
                     break;
@@ -125,6 +113,7 @@ public class DriverFactory implements En
 
                 case FIREFOX:
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.setCapability("marionette", false);
                     firefoxOptions.merge(caps);
                     driver = new FirefoxDriver(firefoxOptions);
                     break;
@@ -144,12 +133,19 @@ public class DriverFactory implements En
                 default:
                     throw new RuntimeException("Unsupported browser: " + browser);
             }
+            driver.manage().window().maximize();
         }
         else
         {
             caps.setCapability("username", userName);
             caps.setCapability("accesskey", accessKey);
-            caps.setCapability("extendedDebugging", true);
+            caps.setCapability("recordVideo", "true");
+            caps.setCapability("recordMp4", "true");
+            caps.setCapability("recordScreenshots", "true");
+//            caps.setCapability("screenResolution", "1600x1200");
+
+//            if (browser == Browser.CHROME)
+                caps.setCapability("extendedDebugging", true);
 
             // Pull the Job Name and Build Number from Jenkins if available...
             String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
@@ -182,8 +178,8 @@ public class DriverFactory implements En
         Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
 
         // Set reasonable page load and script timeouts
-        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
+//        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+//        driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -258,7 +254,7 @@ public class DriverFactory implements En
 
         if (Util.runLocal == true)
         {
-            url = LOCAL_URL;
+            url = LOCAL_APPIUM_URL;
         }
         else
         {
