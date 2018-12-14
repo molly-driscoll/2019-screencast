@@ -1,6 +1,7 @@
 package com.saucelabs.example.stepdefs;
 
 import com.saucelabs.DriverFactory;
+import com.saucelabs.example.TestPlatform;
 import com.saucelabs.example.Util;
 import com.saucelabs.example.pages.PagesFactory;
 import cucumber.api.Scenario;
@@ -22,7 +23,20 @@ public class StartingSteps extends DriverFactory implements En
 
             startDate = new Date();
 
-            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "69.0", "macOS 10.13");
+            TestPlatform tp = Util.getTestPlatform();
+
+            // When running in Intellij as a Cucumber Test (not via TestNG or Maven), the TestRunner.beforeClass()
+            // won't get called and that's where we get out Test Platform info from.  So we set a default test platform
+            // in these cases.
+            if (tp == null)
+            {
+                tp = new TestPlatform("CHROME", "70", "Windows 10");
+                Util.setTestPlatform(tp);
+            }
+
+            driver = DriverFactory.getDesktopDriverInstance(scenario, tp.browser, tp.version, tp.platform);
+
+//            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.CHROME, "69.0", "macOS 10.13");
 //            driver = DriverFactory.getDesktopDriverInstance(scenario, Browser.FIREFOX, "63.0", "macOS 10.13");
 //            driver = DriverFactory.getMobileDriverInstance(scenario, Platform.ANDROID, "9", null);
 
@@ -59,7 +73,7 @@ public class StartingSteps extends DriverFactory implements En
                 return;
             }
 
-            if (Util.isMobile == false)
+            if (!Util.isMobile)
             {
                 Util.reportSauceLabsResult(driver, isSuccess);
             }
