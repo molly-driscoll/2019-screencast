@@ -30,6 +30,8 @@ public class Util
 
     public static boolean isMobile;
 
+    private static ThreadLocal<TestPlatform> testPlatformThreadLocal = new ThreadLocal<>();
+
     // https://wiki.saucelabs.com/display/DOCS/Annotating+Tests+with+the+Sauce+Labs+REST+API
 
     /**
@@ -158,23 +160,23 @@ public class Util
 
     public static void getSaucePerformance(RemoteWebDriver driver)
     {
-//        if (Util.runLocal == false)
-//        {
-//            String browserName = driver.getCapabilities().getBrowserName();
-//            if (browserName.equals("chrome"))
-//            {
-//                try
-//                {
-//                    driver.manage().logs().get("sauce:performance");
-//
-////                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-//                    Util.sleep(3000);
-//                }
-//                catch (org.openqa.selenium.UnsupportedCommandException ignored)
-//                {
-//                }
-//            }
-//        }
+        if (!Util.runLocal)
+        {
+            String browserName = driver.getCapabilities().getBrowserName();
+            if (browserName.equals("chrome"))
+            {
+                try
+                {
+                    driver.manage().logs().get("sauce:performance");
+
+//                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+                    Util.sleep(3000);
+                }
+                catch (org.openqa.selenium.UnsupportedCommandException ignored)
+                {
+                }
+            }
+        }
     }
 
     public static void takeScreenShot(WebDriver driver)
@@ -192,5 +194,15 @@ public class Util
         {
             e.printStackTrace();
         }
+    }
+
+    public static TestPlatform getTestPlatform()
+    {
+        return testPlatformThreadLocal.get();
+    }
+
+    public static void setTestPlatform(TestPlatform tp)
+    {
+        testPlatformThreadLocal.set(tp);
     }
 }
