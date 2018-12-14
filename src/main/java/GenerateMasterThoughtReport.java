@@ -30,7 +30,9 @@ public class GenerateMasterThoughtReport
         File reportOutputDirectory = new File(outputDir);
 
         File jsonDir = new File("target/cucumber-report");
-        List<String> findAllJSONFiles = findAllJSONFiles(jsonDir);
+//        List<String> findAllJSONFiles = findAllJSONFiles(jsonDir);
+        List<String> findAllJSONFiles = new ArrayList<>();
+        findAllJSONFiles.add("/Volumes/Duo1/github/billmeyer/saucedemo-java-cucumber/target/cucumber-report/cucumber.json");
 
 //        List<String> jsonFiles = new ArrayList<>();
 //        jsonFiles.add(cucumberJson);
@@ -67,7 +69,7 @@ public class GenerateMasterThoughtReport
         Reportable result = reportBuilder.generateReports();
 
         Trends trends = new Trends();
-        trends.addBuild("buildName", result);
+//        trends.addBuild("buildName", result);
     }
 
     private List<String> findAllJSONFiles(File file)
