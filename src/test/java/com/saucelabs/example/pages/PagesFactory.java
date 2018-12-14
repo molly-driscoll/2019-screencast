@@ -4,7 +4,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class PagesFactory
 {
-    private static PagesFactory instance;
+    private static ThreadLocal<PagesFactory> pagesFactories = new ThreadLocal<>();
     private RemoteWebDriver driver;
 
     private CheckOutStepOnePage checkOutStepOnePage;
@@ -15,12 +15,13 @@ public class PagesFactory
 
     public static void start(RemoteWebDriver driver)
     {
-        instance = new PagesFactory(driver);
+        PagesFactory instance = new PagesFactory(driver);
+        pagesFactories.set(instance);
     }
 
     public static PagesFactory getInstance()
     {
-        return instance;
+        return pagesFactories.get();
     }
 
     private PagesFactory(RemoteWebDriver driver)
