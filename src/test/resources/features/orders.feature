@@ -28,8 +28,8 @@
       And The user clicks on the shopping cart
       Then There should be "3" items in the shopping cart
       Examples:
-        |username|password|item|
-        |standard_user  |secret_sauce |Sauce Labs Backpack|
+        |username|password|
+        |standard_user  |secret_sauce |
 
     ###############################################################################################
     @regression1
