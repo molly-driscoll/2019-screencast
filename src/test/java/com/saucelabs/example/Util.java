@@ -29,6 +29,7 @@ public class Util
     public static final String buildTag = "Build " + new Date();
 
     public static boolean isMobile;
+    public static boolean isEmuSim;
 
     private static ThreadLocal<TestPlatform> testPlatformThreadLocal = new ThreadLocal<>();
 
@@ -101,7 +102,7 @@ public class Util
      */
     public static void reportTestObjectResult(String sessionId, boolean status)
     {
-        if (runLocal)
+        if (runLocal || isEmuSim)
         {
             return;
         }
@@ -162,6 +163,9 @@ public class Util
     {
         if (!Util.runLocal)
         {
+            if (isMobile)
+                return;
+
             String browserName = driver.getCapabilities().getBrowserName();
             if (browserName.equals("chrome"))
             {

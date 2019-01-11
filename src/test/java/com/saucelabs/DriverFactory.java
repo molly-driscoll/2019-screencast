@@ -1,11 +1,11 @@
 package com.saucelabs;
 
+import com.saucelabs.example.TestPlatform;
 import com.saucelabs.example.Util;
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.IOSMobileCapabilityType;
 import io.appium.java_client.remote.MobileBrowserType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.MutableCapabilities;
@@ -18,6 +18,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
@@ -81,26 +82,42 @@ public class DriverFactory implements En
         }
     }
 
-    public static RemoteWebDriver getDesktopDriverInstance(Scenario scenario, Browser browser, String version)
+    public static RemoteWebDriver getDriverInstance(TestPlatform tp, Scenario scenario)
     {
-        return getDesktopDriverInstance(scenario, browser, version, "");
+        RemoteWebDriver driver = null;
+
+        String platform = tp.getPlatformName();
+        if (platform.startsWith("Windows ") || platform.startsWith("macOS ") || platform.startsWith("OS X"))
+        {
+            driver = getDesktopDriverInstance(tp, scenario);
+        }
+        else if (platform.equals("iOS") || platform.equals("Android"))
+        {
+            driver = DriverFactory.getMobileDriverInstance(tp, scenario, null);
+        }
+
+        return driver;
     }
 
-    public static RemoteWebDriver getDesktopDriverInstance(Scenario scenario, Browser browser, String version, String platform)
+    private static RemoteWebDriver getDesktopDriverInstance(TestPlatform tp, Scenario scenario)
     {
         MutableCapabilities caps = new MutableCapabilities();
-        caps.setCapability("browserName", browser.toString());
-        caps.setCapability("platform", platform);
-        caps.setCapability("version", version);
+        caps.setCapability("browserName", tp.getBrowser().toString());
+        caps.setCapability("version", tp.getBrowserVersion());
+        caps.setCapability("platform", tp.getPlatformName());
         caps.setCapability("name", scenario.getName());
 
-        RemoteWebDriver driver;
+        // Set ACCEPT_SSL_CERTS  variable to true
+        caps.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+
+        RemoteWebDriver driver = null;
         if (Util.runLocal)
         {
-            switch (browser)
+            switch (tp.getBrowser())
             {
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.addArguments("--ignore-certificate-errors");
                     chromeOptions.merge(caps);
                     driver = new ChromeDriver(chromeOptions);
                     break;
@@ -131,7 +148,7 @@ public class DriverFactory implements En
                     break;
 
                 default:
-                    throw new RuntimeException("Unsupported browser: " + browser);
+                    throw new RuntimeException("Unsupported browserName: " + tp.getBrowser());
             }
             driver.manage().window().maximize();
         }
@@ -144,8 +161,8 @@ public class DriverFactory implements En
             caps.setCapability("recordScreenshots", "true");
 //            caps.setCapability("screenResolution", "1600x1200");
 
-//            if (browser == Browser.CHROME)
-                caps.setCapability("extendedDebugging", true);
+//            if (browserName == Browser.CHROME)
+            caps.setCapability("extendedDebugging", true);
 
             // Pull the Job Name and Build Number from Jenkins if available...
             String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
@@ -168,6 +185,20 @@ public class DriverFactory implements En
                 }
             }
 
+//            URL url = null;
+//            try
+//            {
+//                url = new URL("https://ondemand.us-east1.headless.saucelabs.com/wd/hub");
+//            }
+//            catch (MalformedURLException e)
+//            {
+//                e.printStackTrace();
+//            }
+//
+//            AllTrustingHttpClientFactory clientFactory = new AllTrustingHttpClientFactory();
+//
+//            HttpCommandExecutor executor = new HttpCommandExecutor(ImmutableMap.of(), url, clientFactory);
+//            driver = new RemoteWebDriver(executor, caps);
 
             driver = new RemoteWebDriver(SAUCE_URL, caps);
         }
@@ -184,47 +215,44 @@ public class DriverFactory implements En
         return driver;
     }
 
-    public static RemoteWebDriver getLocalIOSDriverInstance(Scenario scenario, String deviceName, String xcodeOrgId, String xcodeSigningId, String udid)
-    {
-        if (Util.runLocal == false)
-        {
-            throw new RuntimeException("getLocalIOSDriverInstance() called when runLocal set to false");
-        }
+//    private static RemoteWebDriver getLocalIOSDriverInstance(Scenario scenario, String deviceName, String xcodeOrgId,
+//                                                             String xcodeSigningId, String udid)
+//    {
+//        if (Util.runLocal == false)
+//        {
+//            throw new RuntimeException("getLocalIOSDriverInstance() called when runLocal set to false");
+//        }
+//
+//        Util.isMobile = true;
+//
+//        MutableCapabilities addlCaps = new MutableCapabilities();
+//
+//        addlCaps.setCapability("updatedWDABundleId", "io.billmeyer.WebDriverAgentRunner");
+//        addlCaps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
+//        addlCaps.setCapability(IOSMobileCapabilityType.XCODE_ORG_ID, xcodeOrgId);
+//        addlCaps.setCapability(IOSMobileCapabilityType.XCODE_SIGNING_ID, xcodeSigningId);
+//        addlCaps.setCapability(MobileCapabilityType.UDID, udid);
+//
+//        return getMobileDriverInstance(scenario, Platform.IOS, null, deviceName, addlCaps);
+//    }
 
-        Util.isMobile = true;
+//    private static RemoteWebDriver getLocalAndroidDriverInstance(Scenario scenario, String deviceName)
+//    {
+//        if (Util.runLocal == false)
+//        {
+//            throw new RuntimeException("getLocalAndroidDriverInstance() called when runLocal set to false");
+//        }
+//
+//        Util.isMobile = true;
+//
+//        MutableCapabilities addlCaps = new MutableCapabilities();
+//        addlCaps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Espresso");
+//
+//        return getMobileDriverInstance(scenario, Platform.ANDROID, null, deviceName, addlCaps);
+//    }
 
-        MutableCapabilities addlCaps = new MutableCapabilities();
-
-        addlCaps.setCapability("updatedWDABundleId", "io.billmeyer.WebDriverAgentRunner");
-        addlCaps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-        addlCaps.setCapability(IOSMobileCapabilityType.XCODE_ORG_ID, xcodeOrgId);
-        addlCaps.setCapability(IOSMobileCapabilityType.XCODE_SIGNING_ID, xcodeSigningId);
-        addlCaps.setCapability(MobileCapabilityType.UDID, udid);
-
-        return getMobileDriverInstance(scenario, Platform.IOS, null, deviceName, addlCaps);
-    }
-
-    public static RemoteWebDriver getLocalAndroidDriverInstance(Scenario scenario, String deviceName)
-    {
-        if (Util.runLocal == false)
-        {
-            throw new RuntimeException("getLocalAndroidDriverInstance() called when runLocal set to false");
-        }
-
-        Util.isMobile = true;
-
-        MutableCapabilities addlCaps = new MutableCapabilities();
-        addlCaps.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Espresso");
-
-        return getMobileDriverInstance(scenario, Platform.ANDROID, null, deviceName, addlCaps);
-    }
-
-    public static RemoteWebDriver getMobileDriverInstance(Scenario scenario, Platform platform, String platformVersion, String deviceName)
-    {
-        return getMobileDriverInstance(scenario, platform, platformVersion, deviceName, null);
-    }
-
-    public static RemoteWebDriver getMobileDriverInstance(Scenario scenario, Platform platform, String platformVersion, String deviceName, MutableCapabilities addlCaps)
+    private static RemoteWebDriver getMobileDriverInstance(TestPlatform tp, Scenario scenario,
+                                                           MutableCapabilities addlCaps)
     {
         URL url = null;
         RemoteWebDriver driver;
@@ -239,17 +267,16 @@ public class DriverFactory implements En
             caps.merge(addlCaps);
         }
 
-        String platformName = platform.getPartOfOsName()[0];
-        caps.setCapability("platformName", platformName);
+        caps.setCapability("platformName", tp.getPlatformName());
 
-        if (platformVersion != null)
+        if (tp.getPlatformVersion() != null)
         {
-            caps.setCapability("platformVersion", platformVersion);
+            caps.setCapability("platformVersion", tp.getPlatformVersion());
         }
 
-        if (deviceName != null)
+        if (tp.getDeviceName() != null)
         {
-            caps.setCapability("deviceName", deviceName);
+            caps.setCapability("deviceName", tp.getDeviceName());
         }
 
         if (Util.runLocal == true)
@@ -262,8 +289,10 @@ public class DriverFactory implements En
             caps.setCapability("deviceOrientation", "portrait");
             caps.setCapability("recordMp4", "true");
 
-            if (deviceName != null && (deviceName.endsWith(" Simulator") || deviceName.endsWith(" Emulator")))
+            if (tp.getDeviceName() != null && (tp.getDeviceName().endsWith(" Simulator") || tp.getDeviceName().endsWith(
+                    " Emulator")))
             {
+                Util.isEmuSim = true;
                 caps.setCapability("username", userName);
                 caps.setCapability("accesskey", accessKey);
 
@@ -271,6 +300,7 @@ public class DriverFactory implements En
             }
             else
             {
+                Util.isEmuSim = false;
                 caps.setCapability("testobject_api_key", toAccessKey);
                 url = TESTOBJECT_URL;
             }
@@ -279,6 +309,7 @@ public class DriverFactory implements En
         Util.log("Loading driver...");
         long start = System.currentTimeMillis();
 
+        Platform platform = Platform.fromString(tp.getPlatformName());
         switch (platform)
         {
             case ANDROID:

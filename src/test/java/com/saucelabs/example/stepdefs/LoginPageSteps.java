@@ -39,7 +39,7 @@ public class LoginPageSteps implements En
 
             LoginPage loginPage = pf.getLoginPage();
             loginPage.clickLogin();
-            Util.sleep(1000);
+            Util.sleep(3000);
         });
 
         Then("^The user should login successfully and is brought to the inventory page$", () -> {
