@@ -1,5 +1,6 @@
 package com.saucelabs.example;
 
+import com.saucelabs.Browser;
 import cucumber.api.CucumberOptions;
 import cucumber.api.SnippetType;
 import cucumber.api.testng.CucumberFeatureWrapper;
@@ -10,6 +11,7 @@ import gherkin.pickles.Pickle;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -82,12 +84,26 @@ public class TestRunner
     private TestNGCucumberRunner testNGCucumberRunner;
 
     @Parameters({"browser", "version", "platform"})
-    @BeforeClass(alwaysRun = true)
-    public void setUpClass(String browser, String version, String platform)
+    @BeforeClass(alwaysRun = false)
+    public void setUpDesktopProfile(@Optional String browser, String version, String platform)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
-        TestPlatform tp = new TestPlatform(browser, version, platform);
+        TestPlatform.Builder builder = new TestPlatform.Builder();
+
+        TestPlatform tp = builder.browser(Browser.valueOf(browser)).browserVersion(version).platformName(platform).build();
+        Util.setTestPlatform(tp);
+    }
+
+    @Parameters({"deviceName", "platform"})
+    @BeforeClass(alwaysRun = false)
+    public void setUpMobileProfile(String deviceName, String platform)
+    {
+        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
+
+        TestPlatform.Builder builder = new TestPlatform.Builder();
+
+        TestPlatform tp = builder.deviceName(deviceName).platformName(platform).build();
         Util.setTestPlatform(tp);
     }
 
