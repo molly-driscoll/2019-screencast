@@ -33,6 +33,15 @@
         </classes>
     </test>
 
+    <test name="Firefox on Linux">
+        <parameter name="browser" value="FIREFOX"/>
+        <parameter name="version" value="latest"/>
+        <parameter name="platform" value="Linux"/>
+        <classes>
+            <class name="com.saucelabs.example.DesktopTestRunner"/>
+        </classes>
+    </test>
+
     <!--<test name="Firefox on macOS">-->
     <!--<parameter name="browser" value="FIREFOX"/>-->
     <!--<parameter name="version" value="64.0"/>-->
@@ -53,6 +62,15 @@
 
     <test name="Chrome on Headless">
         <parameter name="browser" value="CHROME"/>
+        <parameter name="version" value="latest"/>
+        <parameter name="platform" value="Linux"/>
+        <classes>
+            <class name="com.saucelabs.example.HeadlessTestRunner"/>
+        </classes>
+    </test>
+
+    <test name="Firefox on Headless">
+        <parameter name="browser" value="FIREFOX"/>
         <parameter name="version" value="latest"/>
         <parameter name="platform" value="Linux"/>
         <classes>
