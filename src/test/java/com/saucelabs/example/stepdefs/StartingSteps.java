@@ -1,7 +1,7 @@
 package com.saucelabs.example.stepdefs;
 
-import com.saucelabs.Browser;
-import com.saucelabs.DriverFactory;
+import com.saucelabs.example.Browser;
+import com.saucelabs.example.DriverFactory;
 import com.saucelabs.example.TestPlatform;
 import com.saucelabs.example.Util;
 import com.saucelabs.example.pages.PagesFactory;

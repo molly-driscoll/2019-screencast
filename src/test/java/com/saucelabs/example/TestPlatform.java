@@ -1,13 +1,12 @@
 package com.saucelabs.example;
 
-import com.saucelabs.Browser;
-
 public class TestPlatform
 {
     private Browser browser;
     private String browserVersion;
     private String platformName;
     private String platformVersion;
+    private PlatformContainer platformContainer;
     private String deviceName;
 
     private TestPlatform()
@@ -20,6 +19,7 @@ public class TestPlatform
         private String browserVersion;
         private String platformName;
         private String platformVersion;
+        private PlatformContainer platformContainer;
         private String deviceName;
 
         public Builder()
@@ -57,6 +57,12 @@ public class TestPlatform
             return this;
         }
 
+        public Builder platformContainer(PlatformContainer platformContainer)
+        {
+            this.platformContainer = platformContainer;
+            return this;
+        }
+
         public TestPlatform build()
         {
             TestPlatform tp = new TestPlatform();
@@ -64,6 +70,7 @@ public class TestPlatform
             tp.browserVersion = browserVersion;
             tp.platformName = platformName;
             tp.platformVersion = platformVersion;
+            tp.platformContainer = platformContainer;
             tp.deviceName = deviceName;
             return tp;
         }
@@ -88,6 +95,8 @@ public class TestPlatform
     {
         return platformVersion;
     }
+
+    public PlatformContainer getPlatformContainer() { return platformContainer; }
 
     public String getDeviceName()
     {

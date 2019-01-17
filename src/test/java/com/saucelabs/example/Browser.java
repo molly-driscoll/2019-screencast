@@ -1,4 +1,4 @@
-package com.saucelabs;
+package com.saucelabs.example;
 
 public enum Browser
 {

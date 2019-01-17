@@ -163,7 +163,12 @@ public class Util
     {
         if (!Util.runLocal)
         {
-            if (isMobile)
+            TestPlatform tp = Util.getTestPlatform();
+
+            if (tp.getPlatformContainer() != PlatformContainer.DESKTOP)
+                return;
+
+            if (tp.getPlatformName().equalsIgnoreCase("linux"))
                 return;
 
             String browserName = driver.getCapabilities().getBrowserName();

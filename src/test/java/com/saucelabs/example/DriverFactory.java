@@ -1,7 +1,5 @@
-package com.saucelabs;
+package com.saucelabs.example;
 
-import com.saucelabs.example.TestPlatform;
-import com.saucelabs.example.Util;
 import cucumber.api.Scenario;
 import cucumber.api.java8.En;
 import io.appium.java_client.android.AndroidDriver;
@@ -33,11 +31,14 @@ public class DriverFactory implements En
     private static final String userName = System.getenv("SAUCE_USERNAME");
     private static final String accessKey = System.getenv("SAUCE_ACCESS_KEY");
     private static final String toAccessKey = System.getenv("TESTOBJECT_API_KEY");
+    private static final String headlessUserName = System.getenv("HEADLESS_SAUCE_USERNAME");
+    private static final String headlessAccessKey = System.getenv("HEADLESS_SAUCE_ACCESS_KEY");
 
     private static URL LOCAL_SELENIUM_URL;
     private static URL LOCAL_APPIUM_URL;
     private static URL SAUCE_URL;
     private static URL TESTOBJECT_URL;
+    private static URL HEADLESS_URL;
 
     static
     {
@@ -80,6 +81,16 @@ public class DriverFactory implements En
             System.err.printf("Malformed TESTOBJECT_URL: %s\n", e.getMessage());
             System.exit(-1);
         }
+
+        try
+        {
+            HEADLESS_URL = new URL("http://ondemand.us-east1.headless.saucelabs.com/wd/hub");
+        }
+        catch (MalformedURLException e)
+        {
+            System.err.printf("Malformed HEADLESS_URL: %s\n", e.getMessage());
+            System.exit(-1);
+        }
     }
 
     public static RemoteWebDriver getDriverInstance(TestPlatform tp, Scenario scenario)
@@ -87,7 +98,11 @@ public class DriverFactory implements En
         RemoteWebDriver driver = null;
 
         String platform = tp.getPlatformName();
-        if (platform.startsWith("Windows ") || platform.startsWith("macOS ") || platform.startsWith("OS X"))
+        if (tp.getPlatformContainer() == PlatformContainer.HEADLESS)
+        {
+            driver = getHeadlessDriverInstance(tp, scenario);
+        }
+        else if (platform.startsWith("Windows ") || platform.startsWith("macOS ") || platform.startsWith("OS X") || platform.equalsIgnoreCase("linux"))
         {
             driver = getDesktopDriverInstance(tp, scenario);
         }
@@ -95,6 +110,52 @@ public class DriverFactory implements En
         {
             driver = DriverFactory.getMobileDriverInstance(tp, scenario, null);
         }
+
+        return driver;
+    }
+
+    private static RemoteWebDriver getHeadlessDriverInstance(TestPlatform tp, Scenario scenario)
+    {
+        MutableCapabilities caps = new MutableCapabilities();
+        caps.setCapability("browserName", tp.getBrowser().toString());
+        caps.setCapability("version", tp.getBrowserVersion());
+        caps.setCapability("platform", tp.getPlatformName());
+        caps.setCapability("name", scenario.getName());
+
+        caps.setCapability("username", headlessUserName);
+        caps.setCapability("accesskey", headlessAccessKey);
+
+        // Pull the Job Name and Build Number from Jenkins if available...
+        String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
+        if (jenkinsBuildNumber != null)
+        {
+            caps.setCapability("build", jenkinsBuildNumber);
+        }
+        else
+        {
+            String jobName = System.getenv("JOB_NAME");
+            String buildNumber = System.getenv("BUILD_NUMBER");
+
+            if (jobName != null && buildNumber != null)
+            {
+                caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+            }
+            else
+            {
+                caps.setCapability("build", Util.buildTag);
+            }
+        }
+
+        RemoteWebDriver driver = new RemoteWebDriver(HEADLESS_URL, caps);
+
+        String sessionId = driver.getSessionId().toString();
+        Util.log("Started %s", new Date().toString());
+        Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
+        Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
+
+        // Set reasonable page load and script timeouts
+//        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+//        driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
 
         return driver;
     }
@@ -161,7 +222,6 @@ public class DriverFactory implements En
             caps.setCapability("recordScreenshots", "true");
 //            caps.setCapability("screenResolution", "1600x1200");
 
-//            if (browserName == Browser.CHROME)
             caps.setCapability("extendedDebugging", true);
 
             // Pull the Job Name and Build Number from Jenkins if available...
@@ -184,21 +244,6 @@ public class DriverFactory implements En
                     caps.setCapability("build", Util.buildTag);
                 }
             }
-
-//            URL url = null;
-//            try
-//            {
-//                url = new URL("https://ondemand.us-east1.headless.saucelabs.com/wd/hub");
-//            }
-//            catch (MalformedURLException e)
-//            {
-//                e.printStackTrace();
-//            }
-//
-//            AllTrustingHttpClientFactory clientFactory = new AllTrustingHttpClientFactory();
-//
-//            HttpCommandExecutor executor = new HttpCommandExecutor(ImmutableMap.of(), url, clientFactory);
-//            driver = new RemoteWebDriver(executor, caps);
 
             driver = new RemoteWebDriver(SAUCE_URL, caps);
         }
@@ -320,9 +365,6 @@ public class DriverFactory implements En
             case IOS:
                 caps.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.SAFARI);
                 driver = new IOSDriver(url, caps);
-
-//                driver.executeScript("env.sendKeyStrategy = 'setValue'");
-//                driver.executeScript("env.sendKeyStrategy = 'grouped'");
                 break;
 
             default:
@@ -333,17 +375,11 @@ public class DriverFactory implements En
         Util.log("Driver loaded in %.2f seconds", ((stop - start) / 1000f));
 
         Util.log("Started %s", new Date().toString());
-//        String sessionId = driver.getSessionId().toString();
-//        Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
 
         // Set reasonable page load and script timeouts
         driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
         driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
 
-//        String jsonCaps = new Gson().toJson(driver.getCapabilities().asMap());
-//        Util.log("Capabilities: %s\n", jsonCaps);
-
         return driver;
     }
-
 }

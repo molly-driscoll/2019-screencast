@@ -4,6 +4,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.SnippetType;
 import cucumber.api.testng.TestNGCucumberRunner;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 // @formatter:off
@@ -24,11 +25,11 @@ import org.testng.annotations.Parameters;
     }
 )
 // @formatter:on
-public class MobileTestRunner extends AbstractTestRunner
+public class HeadlessTestRunner extends AbstractTestRunner
 {
-    @Parameters({"deviceName", "platform", "platformVersion"})
-    @BeforeClass(alwaysRun = true)
-    public void setUpMobileProfile(String deviceName, String platform, String platformVersion)
+    @Parameters({"browser", "version", "platform"})
+    @BeforeClass(alwaysRun = false)
+    public void setUpHeadlessProfile(@Optional String browser, String version, String platform)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
@@ -36,10 +37,10 @@ public class MobileTestRunner extends AbstractTestRunner
 
         // @formatter:off
         TestPlatform tp = builder
-                .deviceName(deviceName)
+                .browser(Browser.valueOf(browser))
+                .browserVersion(version)
                 .platformName(platform)
-                .platformVersion(platformVersion)
-                .platformContainer(PlatformContainer.MOBILE)
+                .platformContainer(PlatformContainer.HEADLESS)
                 .build();
         // @formatter:on
 
