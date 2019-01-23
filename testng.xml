@@ -15,14 +15,14 @@
 
     <!-- macOS Testing -->
 
-    <!--<test name="Chrome on macOS">-->
-    <!--<parameter name="browser" value="CHROME"/>-->
-    <!--<parameter name="version" value="70"/>-->
-    <!--<parameter name="platform" value="macOS 10.13"/>-->
-    <!--<classes>-->
-    <!--<class name="com.saucelabs.example.DesktopTestRunner"/>-->
-    <!--</classes>-->
-    <!--</test>-->
+    <test name="Chrome on macOS">
+        <parameter name="browser" value="CHROME"/>
+        <parameter name="version" value="70"/>
+        <parameter name="platform" value="macOS 10.13"/>
+        <classes>
+            <class name="com.saucelabs.example.DesktopTestRunner"/>
+        </classes>
+    </test>
 
     <test name="Chrome on Linux">
         <parameter name="browser" value="CHROME"/>
@@ -33,14 +33,14 @@
         </classes>
     </test>
 
-    <test name="Firefox on Linux">
-        <parameter name="browser" value="FIREFOX"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.DesktopTestRunner"/>
-        </classes>
-    </test>
+    <!--<test name="Firefox on Linux">-->
+        <!--<parameter name="browser" value="FIREFOX"/>-->
+        <!--<parameter name="version" value="latest"/>-->
+        <!--<parameter name="platform" value="Linux"/>-->
+        <!--<classes>-->
+            <!--<class name="com.saucelabs.example.DesktopTestRunner"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <!--<test name="Firefox on macOS">-->
     <!--<parameter name="browser" value="FIREFOX"/>-->
@@ -60,23 +60,23 @@
     <!--</classes>-->
     <!--</test>-->
 
-    <test name="Chrome on Headless">
-        <parameter name="browser" value="CHROME"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.HeadlessTestRunner"/>
-        </classes>
-    </test>
+    <!--<test name="Chrome on Headless">-->
+        <!--<parameter name="browser" value="CHROME"/>-->
+        <!--<parameter name="version" value="latest"/>-->
+        <!--<parameter name="platform" value="Linux"/>-->
+        <!--<classes>-->
+            <!--<class name="com.saucelabs.example.HeadlessTestRunner"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
-    <test name="Firefox on Headless">
-        <parameter name="browser" value="FIREFOX"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.HeadlessTestRunner"/>
-        </classes>
-    </test>
+    <!--<test name="Firefox on Headless">-->
+        <!--<parameter name="browser" value="FIREFOX"/>-->
+        <!--<parameter name="version" value="latest"/>-->
+        <!--<parameter name="platform" value="Linux"/>-->
+        <!--<classes>-->
+            <!--<class name="com.saucelabs.example.HeadlessTestRunner"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <!--<test name="Safari on macOS">-->
     <!--<parameter name="browser" value="SAFARI"/>-->
