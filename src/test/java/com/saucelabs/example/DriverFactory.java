@@ -24,6 +24,7 @@ import org.openqa.selenium.safari.SafariOptions;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class DriverFactory implements En
@@ -102,7 +103,8 @@ public class DriverFactory implements En
         {
             driver = getHeadlessDriverInstance(tp, scenario);
         }
-        else if (platform.startsWith("Windows ") || platform.startsWith("macOS ") || platform.startsWith("OS X") || platform.equalsIgnoreCase("linux"))
+        else if (platform.startsWith("Windows ") || platform.startsWith("macOS ") || platform.startsWith(
+                "OS X") || platform.equalsIgnoreCase("linux"))
         {
             driver = getDesktopDriverInstance(tp, scenario);
         }
@@ -125,26 +127,7 @@ public class DriverFactory implements En
         caps.setCapability("username", headlessUserName);
         caps.setCapability("accesskey", headlessAccessKey);
 
-        // Pull the Job Name and Build Number from Jenkins if available...
-        String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
-        if (jenkinsBuildNumber != null)
-        {
-            caps.setCapability("build", jenkinsBuildNumber);
-        }
-        else
-        {
-            String jobName = System.getenv("JOB_NAME");
-            String buildNumber = System.getenv("BUILD_NUMBER");
-
-            if (jobName != null && buildNumber != null)
-            {
-                caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
-            }
-            else
-            {
-                caps.setCapability("build", Util.buildTag);
-            }
-        }
+        addJenkinsBuildInfo(caps);
 
         RemoteWebDriver driver = new RemoteWebDriver(HEADLESS_URL, caps);
 
@@ -166,7 +149,6 @@ public class DriverFactory implements En
         caps.setCapability("browserName", tp.getBrowser().toString());
         caps.setCapability("version", tp.getBrowserVersion());
         caps.setCapability("platform", tp.getPlatformName());
-        caps.setCapability("name", scenario.getName());
 
         // Set ACCEPT_SSL_CERTS  variable to true
         caps.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
@@ -179,6 +161,9 @@ public class DriverFactory implements En
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--ignore-certificate-errors");
+                    HashMap<String, Object> googOpts = new HashMap<String, Object>();
+                    googOpts.put("w3c", true);
+                    chromeOptions.setCapability("goog:chromeOptions", googOpts);
                     chromeOptions.merge(caps);
                     driver = new ChromeDriver(chromeOptions);
                     break;
@@ -215,33 +200,43 @@ public class DriverFactory implements En
         }
         else
         {
-            caps.setCapability("username", userName);
-            caps.setCapability("accesskey", accessKey);
-            caps.setCapability("recordVideo", "true");
-            caps.setCapability("recordMp4", "true");
-            caps.setCapability("recordScreenshots", "true");
-//            caps.setCapability("screenResolution", "1600x1200");
+            // Build the Sauce Options first...
+            MutableCapabilities sauceOpts = new MutableCapabilities();
+            sauceOpts.setCapability("name", scenario.getName());
+            sauceOpts.setCapability("username", userName);
+            sauceOpts.setCapability("accesskey", accessKey);
+            sauceOpts.setCapability("recordVideo", "true");
+            sauceOpts.setCapability("recordMp4", "true");
+            sauceOpts.setCapability("recordScreenshots", "true");
+//            sauceOpts.setCapability("screenResolution", "1600x1200");
+            sauceOpts.setCapability("extendedDebugging", true);
 
-            caps.setCapability("extendedDebugging", true);
+            // Add Jenkins Build Info...
+            addJenkinsBuildInfo(sauceOpts);
 
-            // Pull the Job Name and Build Number from Jenkins if available...
-            String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
-            if (jenkinsBuildNumber != null)
+            if (tp.getPlatformName().equalsIgnoreCase("linux"))
             {
-                caps.setCapability("build", jenkinsBuildNumber);
+                // Presently, no supported browsers on Sauce Labs' Linux have W3C so we default back to the old driver
+                caps.merge(sauceOpts);
             }
             else
             {
-                String jobName = System.getenv("JOB_NAME");
-                String buildNumber = System.getenv("BUILD_NUMBER");
+                caps.setCapability("sauce:options", sauceOpts);
 
-                if (jobName != null && buildNumber != null)
+                // For browsers that support W3C natively, turn it on!
+                switch (tp.getBrowser())
                 {
-                    caps.setCapability("build", String.format("%s__%s", jobName, buildNumber));
-                }
-                else
-                {
-                    caps.setCapability("build", Util.buildTag);
+                    case CHROME:
+                        ChromeOptions chromeOptions = new ChromeOptions();
+                        chromeOptions.setExperimentalOption("w3c", true);
+                        caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+                        break;
+
+                    case FIREFOX:
+                        FirefoxOptions firefoxOptions = new FirefoxOptions();
+                        firefoxOptions.setCapability("w3c", true);
+                        caps.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+                        break;
                 }
             }
 
@@ -258,6 +253,32 @@ public class DriverFactory implements En
 //        driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
 
         return driver;
+    }
+
+    private static MutableCapabilities addJenkinsBuildInfo(MutableCapabilities sauceOpts)
+    {
+        // Pull the Job Name and Build Number from Jenkins if available...
+        String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
+        if (jenkinsBuildNumber != null)
+        {
+            sauceOpts.setCapability("build", jenkinsBuildNumber);
+        }
+        else
+        {
+            String jobName = System.getenv("JOB_NAME");
+            String buildNumber = System.getenv("BUILD_NUMBER");
+
+            if (jobName != null && buildNumber != null)
+            {
+                sauceOpts.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+            }
+            else
+            {
+                sauceOpts.setCapability("build", Util.buildTag);
+            }
+        }
+
+        return sauceOpts;
     }
 
 //    private static RemoteWebDriver getLocalIOSDriverInstance(Scenario scenario, String deviceName, String xcodeOrgId,
