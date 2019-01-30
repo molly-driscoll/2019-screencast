@@ -8,6 +8,7 @@ import io.appium.java_client.remote.MobileBrowserType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -133,7 +134,7 @@ public class DriverFactory implements En
 
         String sessionId = driver.getSessionId().toString();
         Util.log("Started %s", new Date().toString());
-        Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
+        Util.log("Test Results: https://app.us-east1.headless.saucelabs.com/tests/%s", sessionId);
         Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
 
         // Set reasonable page load and script timeouts
@@ -240,7 +241,17 @@ public class DriverFactory implements En
                 }
             }
 
-            driver = new RemoteWebDriver(SAUCE_URL, caps);
+            try
+            {
+                driver = new RemoteWebDriver(SAUCE_URL, caps);
+            }
+            catch(WebDriverException e)
+            {
+                System.err.println("Exception trying to open a RemoteWebDriver:");
+                System.err.printf("\t%s\n", e.getMessage());
+                System.err.printf("\tPlatform: %s, Browser: %s, Version: %s\n", tp.getPlatformName(), tp.getBrowser(), tp.getBrowserVersion());
+                return null;
+            }
         }
 
         String sessionId = driver.getSessionId().toString();
