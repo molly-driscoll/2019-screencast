@@ -8,6 +8,7 @@ public class TestPlatform
     private String platformVersion;
     private PlatformContainer platformContainer;
     private String deviceName;
+    private DataCenter dataCenter;
 
     private TestPlatform()
     {
@@ -21,6 +22,7 @@ public class TestPlatform
         private String platformVersion;
         private PlatformContainer platformContainer;
         private String deviceName;
+        private DataCenter dataCenter;
 
         public Builder()
         {
@@ -36,6 +38,12 @@ public class TestPlatform
         public Builder browserVersion(String browserVersion)
         {
             this.browserVersion = browserVersion;
+            return this;
+        }
+
+        public Builder dataCenter(DataCenter dataCenter)
+        {
+            this.dataCenter = dataCenter;
             return this;
         }
 
@@ -71,6 +79,7 @@ public class TestPlatform
             tp.platformName = platformName;
             tp.platformVersion = platformVersion;
             tp.platformContainer = platformContainer;
+            tp.dataCenter = dataCenter;
             tp.deviceName = deviceName;
             return tp;
         }
@@ -97,6 +106,8 @@ public class TestPlatform
     }
 
     public PlatformContainer getPlatformContainer() { return platformContainer; }
+
+    public DataCenter getDataCenter() { return dataCenter; }
 
     public String getDeviceName()
     {

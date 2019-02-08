@@ -27,13 +27,16 @@ import org.testng.annotations.Parameters;
 // @formatter:on
 public class DesktopTestRunner extends AbstractTestRunner
 {
-    @Parameters({"browser", "version", "platform"})
+    @Parameters({"browser", "version", "platform", "dataCenter"})
     @BeforeClass(alwaysRun = false)
-    public void setUpDesktopProfile(@Optional String browser, String version, String platform)
+    public void setUpDesktopProfile(String browser, String version, String platform, @Optional("dataCenter") DataCenter dataCenter)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
         TestPlatform.Builder builder = new TestPlatform.Builder();
+
+        if (dataCenter == null)
+            dataCenter = DataCenter.US;
 
         // @formatter:off
         TestPlatform tp = builder
@@ -41,6 +44,7 @@ public class DesktopTestRunner extends AbstractTestRunner
                 .browserVersion(version)
                 .platformName(platform)
                 .platformContainer(PlatformContainer.DESKTOP)
+                .dataCenter(dataCenter)
                 .build();
         // @formatter:on
 

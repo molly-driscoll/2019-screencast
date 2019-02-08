@@ -37,7 +37,8 @@ public class DriverFactory implements En
 
     private static URL LOCAL_SELENIUM_URL;
     private static URL LOCAL_APPIUM_URL;
-    private static URL SAUCE_URL;
+    private static URL SAUCE_EU_URL;
+    private static URL SAUCE_US_URL;
     private static URL TESTOBJECT_URL;
     private static URL HEADLESS_URL;
 
@@ -65,11 +66,21 @@ public class DriverFactory implements En
 
         try
         {
-            SAUCE_URL = new URL("https://ondemand.saucelabs.com:443/wd/hub");
+            SAUCE_US_URL = new URL("https://ondemand.saucelabs.com:443/wd/hub");
         }
         catch (MalformedURLException e)
         {
-            System.err.printf("Malformed SAUCE_URL: %s\n", e.getMessage());
+            System.err.printf("Malformed SAUCE_US_URL: %s\n", e.getMessage());
+            System.exit(-1);
+        }
+
+        try
+        {
+            SAUCE_EU_URL = new URL("https://ondemand.eu-central-1.saucelabs.com:443/wd/hub");
+        }
+        catch (MalformedURLException e)
+        {
+            System.err.printf("Malformed SAUCE_EU_URL: %s\n", e.getMessage());
             System.exit(-1);
         }
 
@@ -149,6 +160,7 @@ public class DriverFactory implements En
         caps.setCapability("browserName", tp.getBrowser().toString());
         caps.setCapability("version", tp.getBrowserVersion());
         caps.setCapability("platform", tp.getPlatformName());
+        String resultsURL = "";
 
         // Set ACCEPT_SSL_CERTS  variable to true
         caps.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
@@ -240,12 +252,21 @@ public class DriverFactory implements En
                 }
             }
 
-            driver = new RemoteWebDriver(SAUCE_URL, caps);
+            if (tp.getDataCenter().equals(DataCenter.US))
+            {
+                driver = new RemoteWebDriver(SAUCE_US_URL, caps);
+                resultsURL = "https://app.saucelabs.com/tests";
+            }
+            else
+            {
+                driver = new RemoteWebDriver(SAUCE_EU_URL, caps);
+                resultsURL = "https://app.eu-central-1.saucelabs.com/tests";
+            }
         }
 
         String sessionId = driver.getSessionId().toString();
         Util.log("Started %s", new Date().toString());
-        Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
+        Util.log("Test Results: %s/%s", resultsURL, sessionId);
         Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
 
         // Set reasonable page load and script timeouts
@@ -362,7 +383,7 @@ public class DriverFactory implements En
                 caps.setCapability("username", userName);
                 caps.setCapability("accesskey", accessKey);
 
-                url = SAUCE_URL;
+                url = SAUCE_US_URL;
             }
             else
             {
