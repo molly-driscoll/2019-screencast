@@ -144,7 +144,7 @@ public class DriverFactory implements En
 
         String sessionId = driver.getSessionId().toString();
         Util.log("Started %s", new Date().toString());
-        Util.log("Test Results: https://app.saucelabs.com/tests/%s", sessionId);
+        Util.log("Test Results: https://app.us-east1.headless.saucelabs.com/tests/%s", sessionId);
         Util.log("SauceOnDemandSessionID=%s job-name=%s", sessionId, scenario.getName());
 
         // Set reasonable page load and script timeouts
