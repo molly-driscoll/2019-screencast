@@ -29,14 +29,11 @@ public class DesktopTestRunner extends AbstractTestRunner
 {
     @Parameters({"browser", "version", "platform", "dataCenter"})
     @BeforeClass(alwaysRun = false)
-    public void setUpDesktopProfile(String browser, String version, String platform, @Optional("dataCenter") DataCenter dataCenter)
+    public void setUpDesktopProfile(String browser, String version, String platform, @Optional("US") DataCenter dataCenter)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
         TestPlatform.Builder builder = new TestPlatform.Builder();
-
-        if (dataCenter == null)
-            dataCenter = DataCenter.US;
 
         // @formatter:off
         TestPlatform tp = builder
