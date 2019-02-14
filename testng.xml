@@ -2,18 +2,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="BDD Test Suite" verbose="1" parallel="tests" thread-count="15" configfailurepolicy="continue">
 
-    <!-- Headless Testing -->
+    <!-- CHROME testing -->
 
-    <test name="Chrome on Headless">
-        <parameter name="browser" value="CHROME"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.DesktopTestRunner"/>
-        </classes>
-    </test>
-
-    <!-- macOS Testing in the US Data Center -->
+    <!-- Chrome in the US -->
 
     <test name="Chrome on macOS in the US DC">
         <parameter name="browser" value="CHROME"/>
@@ -34,7 +25,7 @@
         </classes>
     </test>
 
-    <!-- macOS Testing in the EU Data Center -->
+    <!-- Chrome in the EU -->
 
     <test name="Chrome on macOS in the EU DC">
         <parameter name="browser" value="CHROME"/>
@@ -55,6 +46,19 @@
             <class name="com.saucelabs.example.DesktopTestRunner"/>
         </classes>
     </test>
+
+    <!-- Chrome on Headless -->
+
+    <test name="Chrome on Headless">
+        <parameter name="browser" value="CHROME"/>
+        <parameter name="version" value="latest"/>
+        <parameter name="platform" value="Linux"/>
+        <classes>
+            <class name="com.saucelabs.example.HeadlessTestRunner"/>
+        </classes>
+    </test>
+
+    <!-- FIREFOX testing -->
 
     <test name="Firefox on Linux">
         <parameter name="browser" value="FIREFOX"/>
@@ -83,23 +87,7 @@
         </classes>
     </test>
 
-    <test name="Chrome on Headless">
-        <parameter name="browser" value="CHROME"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.HeadlessTestRunner"/>
-        </classes>
-    </test>
-
-    <test name="Firefox on Headless">
-        <parameter name="browser" value="FIREFOX"/>
-        <parameter name="version" value="latest"/>
-        <parameter name="platform" value="Linux"/>
-        <classes>
-            <class name="com.saucelabs.example.HeadlessTestRunner"/>
-        </classes>
-    </test>
+    <!-- SAFARI testing -->
 
     <test name="Safari on macOS">
         <parameter name="browser" value="SAFARI"/>
@@ -139,6 +127,8 @@
         </classes>
     </test>
 
+    <!-- EMULATOR testing -->
+
     <test name="Chrome on Android 8 Emulator">
         <parameter name="deviceName" value="Android GoogleAPI Emulator"/>
         <parameter name="platform" value="Android"/>
@@ -174,6 +164,8 @@
             <class name="com.saucelabs.example.MobileTestRunner"/>
         </classes>
     </test>
+
+    <!-- SIMULATOR testing -->
 
     <test name="Safari on iPhone X Simulator">
         <parameter name="deviceName" value="iPhone X Simulator"/>
