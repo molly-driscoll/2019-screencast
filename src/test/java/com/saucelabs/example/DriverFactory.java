@@ -222,6 +222,7 @@ public class DriverFactory implements En
             sauceOpts.setCapability("recordScreenshots", "true");
 //            sauceOpts.setCapability("screenResolution", "1600x1200");
             sauceOpts.setCapability("extendedDebugging", true);
+            sauceOpts.setCapability("seleniumVersion", "3.12.0");
 
             // Add Jenkins Build Info...
             addJenkinsBuildInfo(sauceOpts);
