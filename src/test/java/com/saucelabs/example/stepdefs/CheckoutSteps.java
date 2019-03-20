@@ -52,7 +52,7 @@ public class CheckoutSteps
         Assert.assertEquals(actual, expected);
 
         Util.getSaucePerformance(driver);
-//        Util.takeScreenShot(driver);
+        Util.takeScreenShot(driver);
     }
 
     @And("^The tax should be \"([^\"]*)\"$")

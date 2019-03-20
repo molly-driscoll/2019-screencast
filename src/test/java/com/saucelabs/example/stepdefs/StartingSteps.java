@@ -1,6 +1,5 @@
 package com.saucelabs.example.stepdefs;
 
-import com.saucelabs.example.Browser;
 import com.saucelabs.example.DriverFactory;
 import com.saucelabs.example.TestPlatform;
 import com.saucelabs.example.Util;
@@ -33,7 +32,9 @@ public class StartingSteps extends DriverFactory implements En
             {
                 TestPlatform.Builder builder = new TestPlatform.Builder();
 
-                tp = builder.browser(Browser.CHROME).browserVersion("70").platformName("Windows 10").build();
+//                tp = builder.browser(Browser.CHROME).browserVersion("72").platformName("Windows 10").build();
+                tp = builder.deviceName("iPhone 7").platformName("iOS").platformVersion("12.1.4").appKey("$ENV{TESTOBJECT_API_KEY}").build();
+//                tp = builder.deviceName("Samsung.*").platformName("Android").platformVersion("8.0.0").appKey("$ENV{TESTOBJECT_API_KEY}").build();
                 Util.setTestPlatform(tp);
             }
 

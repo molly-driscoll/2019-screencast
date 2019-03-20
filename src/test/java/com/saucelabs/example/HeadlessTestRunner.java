@@ -27,9 +27,9 @@ import org.testng.annotations.Parameters;
 // @formatter:on
 public class HeadlessTestRunner extends AbstractTestRunner
 {
-    @Parameters({"browser", "version", "platform"})
+    @Parameters({"browser", "version", "platformName"})
     @BeforeClass(alwaysRun = false)
-    public void setUpHeadlessProfile(@Optional String browser, String version, String platform)
+    public void setUpHeadlessProfile(@Optional String browser, String version, String platformName)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
@@ -39,7 +39,7 @@ public class HeadlessTestRunner extends AbstractTestRunner
         TestPlatform tp = builder
                 .browser(Browser.valueOf(browser))
                 .browserVersion(version)
-                .platformName(platform)
+                .platformName(platformName)
                 .platformContainer(PlatformContainer.HEADLESS)
                 .build();
         // @formatter:on

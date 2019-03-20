@@ -3,15 +3,56 @@ package com.saucelabs.example;
 public class TestPlatform
 {
     private Browser browser;
+    private DataCenter dataCenter;
+    private PlatformContainer platformContainer;
+    private String appKey;
     private String browserVersion;
+    private String deviceName;
     private String platformName;
     private String platformVersion;
-    private PlatformContainer platformContainer;
-    private String deviceName;
-    private DataCenter dataCenter;
 
     private TestPlatform()
     {
+    }
+
+    public String getAppKey()
+    {
+        return appKey;
+    }
+
+    public Browser getBrowser()
+    {
+        return browser;
+    }
+
+    public String getBrowserVersion()
+    {
+        return browserVersion;
+    }
+
+    public DataCenter getDataCenter()
+    {
+        return dataCenter;
+    }
+
+    public String getDeviceName()
+    {
+        return deviceName;
+    }
+
+    public PlatformContainer getPlatformContainer()
+    {
+        return platformContainer;
+    }
+
+    public String getPlatformName()
+    {
+        return platformName;
+    }
+
+    public String getPlatformVersion()
+    {
+        return platformVersion;
     }
 
     public static class Builder
@@ -23,10 +64,17 @@ public class TestPlatform
         private PlatformContainer platformContainer;
         private String deviceName;
         private DataCenter dataCenter;
+        private String appKey;
 
         public Builder()
         {
 
+        }
+
+        public Builder appKey(String appKey)
+        {
+            this.appKey = appKey;
+            return this;
         }
 
         public Builder browser(Browser browser)
@@ -74,43 +122,16 @@ public class TestPlatform
         public TestPlatform build()
         {
             TestPlatform tp = new TestPlatform();
+            tp.appKey = appKey;
             tp.browser = browser;
             tp.browserVersion = browserVersion;
-            tp.platformName = platformName;
-            tp.platformVersion = platformVersion;
-            tp.platformContainer = platformContainer;
             tp.dataCenter = dataCenter;
             tp.deviceName = deviceName;
+            tp.platformContainer = platformContainer;
+            tp.platformName = platformName;
+            tp.platformVersion = platformVersion;
             return tp;
         }
     }
 
-    public Browser getBrowser()
-    {
-        return browser;
-    }
-
-    public String getBrowserVersion()
-    {
-        return browserVersion;
-    }
-
-    public String getPlatformName()
-    {
-        return platformName;
-    }
-
-    public String getPlatformVersion()
-    {
-        return platformVersion;
-    }
-
-    public PlatformContainer getPlatformContainer() { return platformContainer; }
-
-    public DataCenter getDataCenter() { return dataCenter; }
-
-    public String getDeviceName()
-    {
-        return deviceName;
-    }
 }

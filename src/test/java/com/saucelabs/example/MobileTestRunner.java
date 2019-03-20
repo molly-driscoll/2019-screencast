@@ -4,6 +4,7 @@ import cucumber.api.CucumberOptions;
 import cucumber.api.SnippetType;
 import cucumber.api.testng.TestNGCucumberRunner;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 // @formatter:off
@@ -26,20 +27,28 @@ import org.testng.annotations.Parameters;
 // @formatter:on
 public class MobileTestRunner extends AbstractTestRunner
 {
-    @Parameters({"deviceName", "platform", "platformVersion"})
+    @Parameters({"deviceName", "platformName", "platformVersion", "appKey"})
     @BeforeClass(alwaysRun = true)
-    public void setUpMobileProfile(String deviceName, String platform, String platformVersion)
+    public void setUpMobileProfile(@Optional("") String deviceName, String platformName, String platformVersion, String appKey)
     {
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 
         TestPlatform.Builder builder = new TestPlatform.Builder();
 
+        if (appKey.startsWith("$ENV{"))
+        {
+            String envVar = appKey.substring(5, appKey.length()-1);
+            appKey = System.getenv(envVar);
+        }
+        System.err.printf("appKey=%s\n", appKey);
+
         // @formatter:off
         TestPlatform tp = builder
                 .deviceName(deviceName)
-                .platformName(platform)
+                .platformName(platformName)
                 .platformVersion(platformVersion)
                 .platformContainer(PlatformContainer.MOBILE)
+                .appKey(appKey)
                 .build();
         // @formatter:on
 

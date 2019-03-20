@@ -18,7 +18,7 @@ public class CheckOutStepOnePage extends AbstractPage
     @FindBy(xpath = "//input[@data-test='postalCode']")
     private WebElement postalCodeElem;
 
-    @FindBy(css = "input.cart_checkout_link")
+    @FindBy(css = "div.checkout_buttons > input")
     private WebElement continueElem;
 
     public CheckOutStepOnePage(WebDriver driver)

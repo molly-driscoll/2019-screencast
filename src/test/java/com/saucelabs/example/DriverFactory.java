@@ -86,7 +86,7 @@ public class DriverFactory implements En
 
         try
         {
-            TESTOBJECT_URL = new URL("https://us1.appium.testobject.com/wd/hub");
+            TESTOBJECT_URL = new URL("http://us1.appium.testobject.com/wd/hub");
         }
         catch (MalformedURLException e)
         {
@@ -373,7 +373,7 @@ public class DriverFactory implements En
         }
         else
         {
-            caps.setCapability("appiumVersion", "1.9.1");
+            caps.setCapability("appiumVersion", "1.10.1");
             caps.setCapability("deviceOrientation", "portrait");
             caps.setCapability("recordMp4", "true");
 
@@ -402,11 +402,13 @@ public class DriverFactory implements En
         {
             case ANDROID:
                 caps.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.CHROME);
+                caps.setCapability("automationName", "UIAutomator2");
                 driver = new AndroidDriver(url, caps);
                 break;
 
             case IOS:
                 caps.setCapability(MobileCapabilityType.BROWSER_NAME, MobileBrowserType.SAFARI);
+                caps.setCapability("automationName", "XCUITest");
                 driver = new IOSDriver(url, caps);
                 break;
 

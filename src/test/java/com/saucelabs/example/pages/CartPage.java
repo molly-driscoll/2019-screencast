@@ -10,12 +10,12 @@ import java.util.List;
 
 public class CartPage extends AbstractPage
 {
-    public static final String PAGE_URL = "https://www.saucedemo.com/inventory.html";
+    public static final String PAGE_URL = "https://www.saucedemo.com/cart.html";
 
     @FindBy(xpath = "//button[text()='Open Menu']")
     private WebElement hamburgerElem;
 
-    @FindBy(css = "a.cart_checkout_link")
+    @FindBy(css = "a.btn_action.checkout_button")
     private WebElement checkoutElem;
 
     @FindBy(css = "#shopping_cart_container > a")

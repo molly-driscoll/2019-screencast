@@ -16,6 +16,9 @@ public class InventoryPage extends AbstractPage
     @FindBy(css = "#shopping_cart_container > a")
     private WebElement shoppingCartElem;
 
+    @FindBy(css = "#inventory_container")
+    private WebElement inventoryContainerElem;
+
     public InventoryPage(WebDriver driver)
     {
         super(driver);
@@ -25,7 +28,7 @@ public class InventoryPage extends AbstractPage
     @Override
     public WebElement getPageLoadedTestElement()
     {
-        return hamburgerElem;
+        return inventoryContainerElem;
     }
 
     public void addItemToCartByName(String itemName)
