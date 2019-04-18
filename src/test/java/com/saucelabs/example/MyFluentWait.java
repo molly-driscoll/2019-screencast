@@ -25,20 +25,19 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.Sleeper;
 import org.openqa.selenium.support.ui.Wait;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 //import static java.util.concurrent.TimeUnit.MILLISECONDS;
 //import static java.util.concurrent.TimeUnit.SECONDS;
-
-import java.time.Clock;
-import java.time.Duration;
 //import org.openqa.selenium.support.ui.Clock;
 //import org.openqa.selenium.support.ui.Duration;
 //import org.openqa.selenium.support.ui.Sleeper;

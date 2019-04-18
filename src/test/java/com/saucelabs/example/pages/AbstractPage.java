@@ -94,7 +94,6 @@ abstract class AbstractPage
         try
         {
             driver.navigate().to(url);
-//            driver.get(url);
         }
         catch (java.lang.Exception e)
         {
@@ -112,21 +111,4 @@ abstract class AbstractPage
             }
         }
     }
-
-    public boolean sleep(long msecs)
-    {
-        boolean interrupted = false;
-
-        try
-        {
-            Thread.sleep(msecs);
-        }
-        catch (InterruptedException e)
-        {
-            interrupted = true;
-        }
-
-        return interrupted;
-    }
-
 }

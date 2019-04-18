@@ -11,10 +11,10 @@ public class LoginPage extends AbstractPage
 {
     public static final String PAGE_URL = "https://www.saucedemo.com";
 
-    @FindBy(xpath = "//input[@data-test='username']")
+    @FindBy(css = "#user-name")
     private WebElement usernameElem;
 
-    @FindBy(xpath = "//input[@data-test='password']")
+    @FindBy(css = "#password")
     private WebElement passwordElem;
 
     @FindBy(xpath = "//input[@value='LOGIN']")

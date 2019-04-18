@@ -1,12 +1,12 @@
 package com.saucelabs.example;
 
+import io.appium.java_client.AppiumDriver;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -31,7 +31,7 @@ public class Util
     public static boolean isMobile;
     public static boolean isEmuSim;
 
-    private static ThreadLocal<TestPlatform> testPlatformThreadLocal = new ThreadLocal<>();
+//    private static ThreadLocal<TestPlatform> testPlatformThreadLocal = new ThreadLocal<>();
 
     // https://wiki.saucelabs.com/display/DOCS/Annotating+Tests+with+the+Sauce+Labs+REST+API
 
@@ -56,7 +56,8 @@ public class Util
         System.out.printf(format, args);
         System.out.println();
 
-        if (runLocal || isMobile)
+        // Not for mobile
+        if (driver instanceof AppiumDriver)
         {
             return;
         }
@@ -70,23 +71,25 @@ public class Util
      *
      * @param driver The WebDriver instance we use to log the info
      */
-    public static void name(WebDriver driver, String format, Object... args)
-    {
-        System.out.printf(format, args);
-        System.out.println();
-
-        if (runLocal || isMobile)
-        {
-            return;
-        }
-
-        String msg = String.format(format, args);
-        ((JavascriptExecutor) driver).executeScript("sauce:job-name=" + msg);
-    }
+//    public static void name(WebDriver driver, String format, Object... args)
+//    {
+//        System.out.printf(format, args);
+//        System.out.println();
+//
+//        // Not for mobile
+//        if (driver instanceof AppiumDriver)
+//        {
+//            return;
+//        }
+//
+//        String msg = String.format(format, args);
+//        ((JavascriptExecutor) driver).executeScript("sauce:job-name=" + msg);
+//    }
 
     public static void reportSauceLabsResult(WebDriver driver, boolean status)
     {
-        if (runLocal || isMobile)
+        // Not for mobile
+        if (driver instanceof AppiumDriver)
         {
             return;
         }
@@ -147,45 +150,20 @@ public class Util
 //        System.out.printf("[%s][%s] %s\n", Thread.currentThread().getName(), instance.getClass().getSimpleName(), output);
 //    }
 
-    public static void sleep(long msecs)
+    public static boolean sleep(long msecs)
     {
+        boolean interrupted = false;
+
         try
         {
             Thread.sleep(msecs);
         }
         catch (InterruptedException e)
         {
-            e.printStackTrace();
+            interrupted = true;
         }
-    }
 
-    public static void getSaucePerformance(RemoteWebDriver driver)
-    {
-        if (!Util.runLocal)
-        {
-            TestPlatform tp = Util.getTestPlatform();
-
-            if (tp.getPlatformContainer() != PlatformContainer.DESKTOP)
-                return;
-
-            if (tp.getPlatformName().equalsIgnoreCase("linux"))
-                return;
-
-            String browserName = driver.getCapabilities().getBrowserName();
-            if (browserName.equals("chrome"))
-            {
-                try
-                {
-                    driver.manage().logs().get("sauce:performance");
-
-//                    PagesFactory.getInstance().getDriver().manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-                    Util.sleep(3000);
-                }
-                catch (org.openqa.selenium.UnsupportedCommandException ignored)
-                {
-                }
-            }
-        }
+        return interrupted;
     }
 
     public static void takeScreenShot(WebDriver driver)
@@ -203,15 +181,5 @@ public class Util
         {
             e.printStackTrace();
         }
-    }
-
-    public static TestPlatform getTestPlatform()
-    {
-        return testPlatformThreadLocal.get();
-    }
-
-    public static void setTestPlatform(TestPlatform tp)
-    {
-        testPlatformThreadLocal.set(tp);
     }
 }

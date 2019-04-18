@@ -1,7 +1,7 @@
 package com.saucelabs.example.pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -24,15 +24,10 @@ public class CartPage extends AbstractPage
     @FindAll({@FindBy(css = "#cart_contents_container > div > div.cart_list > div.cart_item")})
     private List<WebElement> itemsList;
 
-    public CartPage(WebDriver driver)
+    public CartPage(RemoteWebDriver driver)
     {
         super(driver);
         PageFactory.initElements(driver, this);
-//
-//        wait = new MyFluentWait<WebDriver>(driver)
-//                .withTimeout(60, ChronoUnit.SECONDS)
-//                .pollingEvery(2, ChronoUnit.SECONDS)
-//                .ignoring(NoSuchElementException.class);
     }
 
     @Override

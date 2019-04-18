@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class InventoryPage extends AbstractPage
+ public class InventoryPage extends AbstractPage
 {
     public static final String PAGE_URL = "https://www.saucedemo.com/inventory.html";
 
