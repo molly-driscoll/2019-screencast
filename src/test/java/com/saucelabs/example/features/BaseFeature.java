@@ -101,7 +101,7 @@ public abstract class BaseFeature
 
         // Browser versions we wish to test on...
         final String[] chromeVers = {"73.0", "72.0"};
-        final String[] firefoxVers = {"73.0", "72.0"};
+        final String[] firefoxVers = {"66.0", "65.0"};
         final String[] safariVers = {"12.0"};
         final String[] edgeVers = {"18.17763", "16.16299", "15.15063"};
 
@@ -127,11 +127,11 @@ public abstract class BaseFeature
         {
             for (String macOSVer : macOSVers)
             {
-                desktops.add(new Object[]{"chrome", firefoxVer, "macOS " + macOSVer});
+                desktops.add(new Object[]{"firefox", firefoxVer, "macOS " + macOSVer});
             }
             for (String winVer : winVers)
             {
-                desktops.add(new Object[]{"chrome", firefoxVer, "Windows " + winVer});
+                desktops.add(new Object[]{"firefox", firefoxVer, "Windows " + winVer});
             }
         }
 

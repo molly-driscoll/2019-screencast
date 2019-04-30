@@ -22,22 +22,27 @@ public class LoginFeatures extends BaseFeature
     public void verifyValidUsersCanSignIn()
     throws MalformedURLException
     {
-        MutableCapabilities caps = MutableCapabilities();
-    	caps.setCapability("browserName", "chrome");
+        URL url = new URL("https://ondemand.saucelabs.com:443/wd/hub");
+
+        DesiredCapabilities caps = DesiredCapabilities.chrome();
         caps.setCapability("platform", "Windows 10");
         caps.setCapability("version", "73.0");
 
         caps.setCapability("username", username);
-        caps.setCapability("accesskey", accessKey);
+        caps.setCapability("accessKey", accessKey);
         caps.setCapability("name", "Verify Valid Users Can Sign In");
+        caps.setCapability("build", "build-1234");
 
         caps.setCapability("extendedDebugging", true);
         caps.setCapability("capturePerformance", true);
 
-        RemoteWebDriver driver = new RemoteWebDriver(new URL("https://ondemand.saucelabs.com:443/wd/hub"), caps);
+        RemoteWebDriver driver = new RemoteWebDriver(url, caps);
 
         LoginPage loginPage = new LoginPage(driver);
         InventoryPage inventoryPage = new InventoryPage(driver);
+
+        JavascriptExecutor jsExec = (JavascriptExecutor)driver;
+        jsExec.executeScript("sauce:context=>>> Verify we are on the Inventory Page");
 
         loginPage.navigateTo(LoginPage.PAGE_URL);
         loginPage.enterUsername("standard_user");
@@ -45,9 +50,6 @@ public class LoginFeatures extends BaseFeature
 
         loginPage.clickLogin();
         inventoryPage.waitForPageLoad();
-
-        JavascriptExecutor jsExec = (JavascriptExecutor)driver;
-        jsExec.executeScript("sauce:context=>>> Verify we are on the Inventory Page");
 
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, InventoryPage.PAGE_URL, "Current URL does not match Expected");

@@ -2,14 +2,11 @@ package com.saucelabs.example.features;
 
 import com.saucelabs.example.pages.InventoryPage;
 import com.saucelabs.example.pages.LoginPage;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -22,16 +19,18 @@ public class LoginFeatures extends BaseFeature
     public void verifyValidUsersCanSignIn()
     throws MalformedURLException
     {
-        MutableCapabilities caps = MutableCapabilities();
-	    caps.setCapability("browserName", "chrome");
+        URL url = new URL("https://ondemand.saucelabs.com:443/wd/hub");
+
+        DesiredCapabilities caps = DesiredCapabilities.chrome();
         caps.setCapability("platform", "Windows 10");
         caps.setCapability("version", "73.0");
 
         caps.setCapability("username", username);
-        caps.setCapability("accesskey", accessKey);
+        caps.setCapability("accessKey", accessKey);
         caps.setCapability("name", "Verify Valid Users Can Sign In");
+        caps.setCapability("build", "build-1234");
 
-        RemoteWebDriver driver = new RemoteWebDriver(new URL("https://ondemand.saucelabs.com:443/wd/hub"), caps);
+        RemoteWebDriver driver = new RemoteWebDriver(url, caps);
 
         LoginPage loginPage = new LoginPage(driver);
         InventoryPage inventoryPage = new InventoryPage(driver);
