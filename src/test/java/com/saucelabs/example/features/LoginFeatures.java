@@ -31,6 +31,9 @@ public class LoginFeatures extends BaseFeature
         caps.setCapability("name", "Verify Valid Users Can Sign In");
         caps.setCapability("build", "build-1234");
 
+        caps.setCapability("extendedDebugging", true);
+        caps.setCapability("capturePerformance", true);
+
         RemoteWebDriver driver = new RemoteWebDriver(url, caps);
 
         LoginPage loginPage = new LoginPage(driver);
