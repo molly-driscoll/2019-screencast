@@ -1,8 +1,10 @@
 package com.saucelabs.example.features;
 
+import com.saucelabs.example.Util;
 import com.saucelabs.example.pages.InventoryPage;
 import com.saucelabs.example.pages.LoginPage;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
@@ -33,17 +35,17 @@ public class LoginFeatures extends BaseFeature
         caps.setCapability("accessKey", accessKey);
         caps.setCapability("name", "Verify Valid Users Can Sign In");
 
-        addBuildInfo(caps);
-
         caps.setCapability("extendedDebugging", true);
         caps.setCapability("capturePerformance", true);
+
+        addBuildInfo(caps);
 
         RemoteWebDriver driver = new RemoteWebDriver(url, caps);
 
         LoginPage loginPage = new LoginPage(driver);
         InventoryPage inventoryPage = new InventoryPage(driver);
 
-        JavascriptExecutor jsExec = (JavascriptExecutor) driver;
+        JavascriptExecutor jsExec = (JavascriptExecutor)driver;
         jsExec.executeScript("sauce:context=>>> Verify we are on the Inventory Page");
 
         loginPage.navigateTo(LoginPage.PAGE_URL);
