@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,15 +19,17 @@ public class LoginFeatures extends BaseFeature
     private static String username = System.getenv("SAUCE_USERNAME");
     private static String accessKey = System.getenv("SAUCE_ACCESS_KEY");
 
-    @Test
-    public void verifyValidUsersCanSignIn()
+    @Test(dataProvider = "desktopDataProvider")
+    public void verifyValidUsersCanSignIn(String browser, String browserVersion, String platform, Method method)
     throws MalformedURLException
     {
         URL url = new URL("https://ondemand.saucelabs.com:443/wd/hub");
 
-        DesiredCapabilities caps = DesiredCapabilities.chrome();
-        caps.setCapability("platform", "Windows 10");
-        caps.setCapability("version", "73.0");
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("browserName", browser);
+        caps.setCapability("version", browserVersion);
+        caps.setCapability("platform", platform);
+        caps.setCapability("avoidProxy", true);
 
         caps.setCapability("username", username);
         caps.setCapability("accessKey", accessKey);
