@@ -6,7 +6,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -15,17 +14,20 @@ import java.net.URL;
 
 public class LoginFeatures extends BaseFeature
 {
+    private static String username = System.getenv("SAUCE_USERNAME");
+    private static String accessKey = System.getenv("SAUCE_ACCESS_KEY");
+
     @Test(dataProvider = "desktopDataProvider")
-    public void verifyValidUsersCanSignIn(String browser, String browserVersion, String os, Method method)
+    public void verifyValidUsersCanSignIn(String browser, String browserVersion, String platform, Method method)
     throws MalformedURLException
     {
-//        RemoteWebDriver driver = createDesktopDriver(browser, browserVersion, os, method.getName());
         URL url = new URL("https://ondemand.saucelabs.com:443/wd/hub");
 
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", browser);
-        caps.setCapability("platform", os);
         caps.setCapability("version", browserVersion);
+        caps.setCapability("platform", platform);
+        caps.setCapability("avoidProxy", true);
 
         caps.setCapability("username", username);
         caps.setCapability("accessKey", accessKey);
@@ -40,7 +42,7 @@ public class LoginFeatures extends BaseFeature
         LoginPage loginPage = new LoginPage(driver);
         InventoryPage inventoryPage = new InventoryPage(driver);
 
-        JavascriptExecutor jsExec = (JavascriptExecutor)driver;
+        JavascriptExecutor jsExec = (JavascriptExecutor) driver;
         jsExec.executeScript("sauce:context=>>> Verify we are on the Inventory Page");
 
         loginPage.navigateTo(LoginPage.PAGE_URL);
