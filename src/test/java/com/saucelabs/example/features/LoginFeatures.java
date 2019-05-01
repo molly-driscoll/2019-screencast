@@ -2,6 +2,7 @@ package com.saucelabs.example.features;
 
 import com.saucelabs.example.pages.InventoryPage;
 import com.saucelabs.example.pages.LoginPage;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
@@ -35,6 +36,9 @@ public class LoginFeatures extends BaseFeature
         LoginPage loginPage = new LoginPage(driver);
         InventoryPage inventoryPage = new InventoryPage(driver);
 
+        JavascriptExecutor jsExec = (JavascriptExecutor)driver;
+        jsExec.executeScript("sauce:context=>>> Verify we are on the Inventory Page");
+
         loginPage.navigateTo(LoginPage.PAGE_URL);
         loginPage.enterUsername("standard_user");
         loginPage.enterPassword("secret_sauce");
@@ -45,6 +49,7 @@ public class LoginFeatures extends BaseFeature
         String currentUrl = driver.getCurrentUrl();
         Assert.assertEquals(currentUrl, InventoryPage.PAGE_URL, "Current URL does not match Expected");
 
+        jsExec.executeScript("sauce:job-result=true");
         driver.quit();
     }
 }
