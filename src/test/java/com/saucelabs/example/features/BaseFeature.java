@@ -8,6 +8,8 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 
 import java.lang.reflect.Method;
@@ -100,10 +102,11 @@ public abstract class BaseFeature
         ArrayList<Object[]> desktops = new ArrayList<>(50);
 
         // Browser versions we wish to test on...
-        final String[] chromeVers = {"73.0", "72.0"};
+        final String[] chromeVers = {"74.0", "73.0", "72.0"};
         final String[] firefoxVers = {"66.0", "65.0"};
         final String[] safariVers = {"12.0"};
         final String[] edgeVers = {"18.17763", "16.16299", "15.15063"};
+        final String[] emuVers = {"9", "8.1", "7.1"};
 
         // Operating System versions we wish to test on...
         final String[] macOSVers = {"10.14", "10.13"};
@@ -150,9 +153,30 @@ public abstract class BaseFeature
             desktops.add(new Object[]{"microsoftedge", edgeVer, "Windows 10"});
         }
 
+//        // Build Android Emulator combos...
+//        for (String emuVer : emuVers)
+//        {
+//            desktops.add(new Object[]{ "Android", emuVer, "Android GoogleAPI Emulator" });
+//        }
+
         System.out.printf("Configured %d OS/Browser combos for testing.\n", desktops.size());
         Object[][] desktopsArray = desktops.toArray(new Object[desktops.size()][]);
         return desktopsArray;
+    }
+
+    protected long startTime, stopTime;
+
+    @BeforeSuite
+    protected void begin()
+    {
+        startTime = System.currentTimeMillis();
+    }
+
+    @AfterSuite
+    protected void end()
+    {
+        stopTime = System.currentTimeMillis();
+        System.out.printf("Total execution time: %d seconds.\n", ((stopTime-startTime)/1000L));
     }
 
     /**

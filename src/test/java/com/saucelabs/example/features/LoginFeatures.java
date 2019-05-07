@@ -25,8 +25,8 @@ public class LoginFeatures extends BaseFeature
 
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("browserName", browser);
-        caps.setCapability("platform", platform);
         caps.setCapability("version", browserVersion);
+        caps.setCapability("platform", platform);
         caps.setCapability("avoidProxy", true);
 
         caps.setCapability("username", username);
