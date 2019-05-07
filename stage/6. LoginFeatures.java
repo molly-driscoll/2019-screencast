@@ -1,12 +1,13 @@
 package com.saucelabs.example.features;
 
+import com.saucelabs.example.Util;
 import com.saucelabs.example.pages.InventoryPage;
 import com.saucelabs.example.pages.LoginPage;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
@@ -33,10 +34,11 @@ public class LoginFeatures extends BaseFeature
         caps.setCapability("username", username);
         caps.setCapability("accessKey", accessKey);
         caps.setCapability("name", "Verify Valid Users Can Sign In");
-        caps.setCapability("build", "build-1234");
 
         caps.setCapability("extendedDebugging", true);
         caps.setCapability("capturePerformance", true);
+
+        addBuildInfo(caps);
 
         RemoteWebDriver driver = new RemoteWebDriver(url, caps);
 
@@ -58,5 +60,31 @@ public class LoginFeatures extends BaseFeature
 
         jsExec.executeScript("sauce:job-result=true");
         driver.quit();
+    }
+
+    private MutableCapabilities addBuildInfo(MutableCapabilities sauceOpts)
+    {
+        // Pull the Job Name and Build Number from Jenkins if available...
+        String jenkinsBuildNumber = System.getenv("JENKINS_BUILD_NUMBER");
+        if (jenkinsBuildNumber != null)
+        {
+            sauceOpts.setCapability("build", jenkinsBuildNumber);
+        }
+        else
+        {
+            String jobName = System.getenv("JOB_NAME");
+            String buildNumber = System.getenv("BUILD_NUMBER");
+
+            if (jobName != null && buildNumber != null)
+            {
+                sauceOpts.setCapability("build", String.format("%s__%s", jobName, buildNumber));
+            }
+            else
+            {
+                sauceOpts.setCapability("build", Util.buildTag);
+            }
+        }
+
+        return sauceOpts;
     }
 }

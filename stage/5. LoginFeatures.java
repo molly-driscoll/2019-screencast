@@ -31,7 +31,6 @@ public class LoginFeatures extends BaseFeature
         caps.setCapability("username", username);
         caps.setCapability("accessKey", accessKey);
         caps.setCapability("name", "Verify Valid Users Can Sign In");
-        caps.setCapability("build", "build-1234");
 
         caps.setCapability("extendedDebugging", true);
         caps.setCapability("capturePerformance", true);
